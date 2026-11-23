@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KopiSvara — Arsip & Kalibrasi Seduh Nusantara</title>
+    
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts: Fraunces (Editorial Serif) & Plus Jakarta Sans (Clean UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        :root {
+            --bg-primary: #F5F1EB;
+            --bg-secondary: #EAE3D7;
+            --bg-card: #FAF8F5;
+            --text-primary: #1E252B;
+            --text-muted: #5A626A;
+            --accent-clay: #C85A32;
+            --accent-navy: #1E2A38;
+            --border-subtle: rgba(30, 37, 43, 0.12);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #14181D;
+            --bg-secondary: #1C2229;
+            --bg-card: #1F262E;
+            --text-primary: #F2EDE4;
+            --text-muted: #9BA3AB;
+            --accent-clay: #E06D44;
+            --accent-navy: #E6DFD3;
+            --border-subtle: rgba(242, 237, 228, 0.12);
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .font-serif {
+            font-family: 'Fraunces', serif;
+            letter-spacing: -0.02em;
+        }
+
+        /* Custom Navbar */
+        .navbar-custom {
+            background-color: var(--bg-primary);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 1rem 0;
+        }
+
+        .brand-mark {
+            font-family: 'Fraunces', serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .brand-dot {
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent-clay);
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* Editorial Hero */
+        .hero-section {
+            padding: 4.5rem 0 3.5rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .eyebrow-tag {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            font-weight: 700;
+            color: var(--accent-clay);
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .hero-title {
+            font-size: clamp(2.4rem, 5vw, 4rem);
+            line-height: 1.08;
+            font-weight: 700;
+        }
+
+        .spec-box {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        /* Filter Pills */
+        .filter-btn {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 0.45rem 1.1rem;
+            border-radius: 100px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background-color: var(--accent-clay);
+            border-color: var(--accent-clay);
+            color: #FFFFFF;
+        }
+
+        /* Bean Cards */
+        .bean-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            padding: 1.75rem;
+            height: 100%;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .bean-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+        }
+
+        .altitude-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.65rem;
+            border-radius: 6px;
+            background-color: var(--bg-secondary);
+            color: var(--text-muted);
+        }
+
+        .tasting-note {
+            font-size: 0.85rem;
+            color: var(--accent-clay);
+            font-weight: 600;
+        }
+
+        /* Interactive Brew Calculator */
+        .calc-panel {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 2.25rem;
+        }
+
+        .form-range::-webkit-slider-thumb {
+            background: var(--accent-clay);
+        }
+
+        .metric-display {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-family: 'Fraunces', serif;
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--accent-clay);
+            line-height: 1.1;
+        }
+
+        .btn-clay {
+            background-color: var(--accent-clay);
+            color: #fff;
+            border: none;
+            padding: 0.65rem 1.4rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .btn-clay:hover {
+            opacity: 0.9;
+            color: #fff;
+        }
+
+        footer {
+            border-top: 1px solid var(--border-subtle);
+            padding: 2.5rem 0;
+            margin-top: 4rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar-custom sticky-top">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="#" class="brand-mark">
+                <span class="brand-dot"></span> KopiSvara
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <a href="#direktori" class="text-decoration-none d-none d-md-inline" style="color: var(--text-primary); font-size: 0.92rem;">Direktori Biji</a>
+                <a href="#kalibrasi" class="text-decoration-none d-none d-md-inline" style="color: var(--text-primary); font-size: 0.92rem;">Kalibrasi Seduh</a>
+                <button id="themeToggle" class="btn btn-sm border" style="color: var(--text-primary); border-color: var(--border-subtle) !important;" title="Ubah Tema Tampilan">
+                    <i class="bi bi-moon-stars" id="themeIcon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-7">
+                    <span class="eyebrow-tag">Indeks Botani & Kalibrasi Ekstraksi</span>
+                    <h1 class="hero-title mb-4">Memetakan karakter rasa biji kopi dataran tinggi Nusantara.</h1>
+                    <p class="lead mb-4" style="color: var(--text-muted); font-size: 1.08rem; max-width: 580px;">
+                        Dokumentasi profil pascapanen, ketinggian tanam, dan kalkulator presisi rasio air untuk metode seduh manual (V60, Kalita, dan Tubruk).
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="#direktori" class="btn btn-clay">Eksplorasi Arsip</a>
+                        <a href="#kalibrasi" class="btn border px-4 py-2" style="color: var(--text-primary); border-color: var(--border-subtle) !important;">Hitung Rasio Seduh</a>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="spec-box">
+                        <div class="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom" style="border-color: var(--border-subtle) !important;">
+                            <span class="small fw-bold text-uppercase" style="letter-spacing: 0.08em;">Status Server & Hosting</span>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle">Static Edge Active</span>
+                        </div>
+                        <p class="small mb-3" style="color: var(--text-muted);">
+                            Halaman ini di-deploy secara statis menggunakan <strong>GitHub Pages</strong> dengan resolusi DNS kustom domain melalui panel <strong>Niagahoster</strong>.
+                        </p>
+                        <div class="row g-2 text-center">
+                            <div class="col-4">
+                                <div class="p-2 rounded" style="background: var(--bg-card);">
+                                    <div class="fw-bold">0 ms</div>
+                                    <div class="small" style="font-size: 0.72rem; color: var(--text-muted);">Backend DB</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2 rounded" style="background: var(--bg-card);">
+                                    <div class="fw-bold">HTTPS</div>
+                                    <div class="small" style="font-size: 0.72rem; color: var(--text-muted);">Let's Encrypt</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2 rounded" style="background: var(--bg-card);">
+                                    <div class="fw-bold">CDN</div>
+                                    <div class="small" style="font-size: 0.72rem; color: var(--text-muted);">Fastly Edge</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Directory Section -->
+    <section id="direktori" class="py-5">
+        <div class="container">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4 gap-3">
+                <div>
+                    <span class="eyebrow-tag mb-1">Katalog Origin</span>
+                    <h2 class="h1 mb-0">Arsip Biji Pilihan</h2>
+                </div>
+                <!-- Filter Controls -->
+                <div class="d-flex flex-wrap gap-2" id="filterContainer">
+                    <button class="filter-btn active" data-filter="all">Semua Proses</button>
+                    <button class="filter-btn" data-filter="washed">Full Washed</button>
+                    <button class="filter-btn" data-filter="natural">Natural</button>
+                    <button class="filter-btn" data-filter="honey">Honey</button>
+                </div>
+            </div>
+
+            <!-- Dynamic Cards Grid -->
+            <div class="row g-4" id="beanGrid"></div>
+        </div>
+    </section>
+
+    <!-- Interactive Brew Calculator -->
+    <section id="kalibrasi" class="py-4">
+        <div class="container">
+            <div class="calc-panel">
+                <div class="row g-4 align-items-center">
+                    <div class="col-lg-6">
+                        <span class="eyebrow-tag mb-1">Alat Bantu Barista</span>
+                        <h2 class="h2 mb-3">Kalibrasi Rasio Seduh</h2>
+                        <p class="small mb-4" style="color: var(--text-muted);">
+                            Geser parameter dosis biji kopi dan rasio ekstraksi untuk menghitung kebutuhan air serta waktu *blooming* optimal secara instan.
+                        </p>
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <label for="doseRange" class="form-label fw-semibold small">Dosis Biji Kopi (Gram)</label>
+                                <span class="fw-bold small" style="color: var(--accent-clay);" id="doseLabel">15g</span>
+                            </div>
+                            <input type="range" class="form-range" min="10" max="40" step="1" value="15" id="doseRange">
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <label for="ratioRange" class="form-label fw-semibold small">Rasio Air (1 : X)</label>
+                                <span class="fw-bold small" style="color: var(--accent-clay);" id="ratioLabel">1 : 15</span>
+                            </div>
+                            <input type="range" class="form-range" min="10" max="18" step="1" value="15" id="ratioRange">
+                        </div>
+
+                        <div class="d-flex gap-2 mt-4">
+                            <button class="btn btn-sm btn-outline-secondary preset-btn" data-dose="15" data-ratio="15">Preset V60 (1:15)</button>
+                            <button class="btn btn-sm btn-outline-secondary preset-btn" data-dose="18" data-ratio="16">Preset Kalita (1:16)</button>
+                            <button class="btn btn-sm btn-outline-secondary preset-btn" data-dose="12" data-ratio="12">Preset Tubruk (1:12)</button>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="metric-display">
+                                    <div class="small text-uppercase fw-bold mb-1" style="font-size: 0.72rem; color: var(--text-muted);">Total Air Seduh</div>
+                                    <div class="metric-value" id="waterOutput">225 ml</div>
+                                    <div class="small mt-1" style="font-size: 0.78rem; color: var(--text-muted);">Suhu: 92°C – 94°C</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="metric-display">
+                                    <div class="small text-uppercase fw-bold mb-1" style="font-size: 0.72rem; color: var(--text-muted);">Air Blooming (2.5x)</div>
+                                    <div class="metric-value" id="bloomOutput">38 ml</div>
+                                    <div class="small mt-1" style="font-size: 0.78rem; color: var(--text-muted);">Durasi: 35 detik</div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="p-3 rounded border d-flex justify-content-between align-items-center" style="background-color: var(--bg-card); border-color: var(--border-subtle) !important;">
+                                    <span class="small fw-medium" id="brewAdvice">Profil seimbang: tingkat keasaman cerah dengan body medium.</span>
+                                    <button class="btn btn-sm btn-clay ms-2" id="copyRecipeBtn">Salin Resep</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+            <div>
+                <strong>KopiSvara</strong> — Proyek Tugas Kuliah Komputasi Awan & Web Hosting.
+            </div>
+            <div>
+                Dihosting via GitHub Pages & Custom Domain DNS.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom Interactive JS -->
+    <script>
+        // 1. Data Arsip Kopi
+        const coffeeData = [
+            {
+                name: "Aceh Gayo Pantan Musara",
+                region: "Bener Meriah, Aceh",
+                altitude: "1.650 mdpl",
+                process: "natural",
+                processLabel: "Natural",
+                notes: "Nangka matang, cokelat hitam, anggur merah",
+                desc: "Fermentasi ceri utuh di atas para-para selama 21 hari menghasilkan body tebal dan aroma buah tropis yang intens."
+            },
+            {
+                name: "Java Preanger Puntang",
+                region: "Bandung, Jawa Barat",
+                altitude: "1.450 mdpl",
+                process: "washed",
+                processLabel: "Full Washed",
+                notes: "Jeruk limau, melati, gula aren",
+                desc: "Pencucian bersih menggunakan air pegunungan menghasilkan kejernihan rasa (clean cup) dengan keasaman sitrus yang rapi."
+            },
+            {
+                name: "Bali Kintamani Catur",
+                region: "Bangli, Bali",
+                altitude: "1.500 mdpl",
+                process: "honey",
+                processLabel: "Red Honey",
+                notes: "Apel merah, karamel, teh hitam",
+                desc: "Lapisan mucilage dipertahankan saat penjemuran untuk menciptakan keseimbangan rasa manis karamel dan keasaman lembut."
+            },
+            {
+                name: "Flores Bajawa Ngada",
+                region: "Ngada, Nusa Tenggara Timur",
+                altitude: "1.550 mdpl",
+                process: "washed",
+                processLabel: "Full Washed",
+                notes: "Kacang panggang, vanila, tembakau manis",
+                desc: "Tumbuh di tanah vulkanik Gunung Inerie dengan naungan pohon dadap, memberikan karakter earthy yang bersih dan manis."
+            },
+            {
+                name: "Toraja Sapan Minanga",
+                region: "Tana Toraja, Sulawesi Selatan",
+                altitude: "1.700 mdpl",
+                process: "honey",
+                processLabel: "Black Honey",
+                notes: "Gula palem, rempah kayu manis, plum",
+                desc: "Pengeringan lambat di ketinggian menghasilkan kompleksitas rasa rempah dan aftertaste manis yang panjang."
+            },
+            {
+                name: "Kerinci Kayu Aro",
+                region: "Kerinci, Jambi",
+                altitude: "1.600 mdpl",
+                process: "natural",
+                processLabel: "Natural Anaerobic",
+                notes: "Stroberi, markisa, kakao",
+                desc: "Proses anaerobik terkontrol memunculkan karakter buah beri segar dengan tekstur lembut di langit-langit mulut."
+            }
+        ];
+
+        // 2. Render Kartu Biji Kopi & Filter
+        const beanGrid = document.getElementById('beanGrid');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        function renderBeans(filter = 'all') {
+            beanGrid.innerHTML = '';
+            const filtered = filter === 'all' 
+                ? coffeeData 
+                : coffeeData.filter(item => item.process === filter);
+
+            filtered.forEach(bean => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 col-lg-4';
+                col.innerHTML = `
+                    <article class="bean-card">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="altitude-badge">${bean.altitude}</span>
+                                <span class="small fw-semibold text-uppercase" style="color: var(--text-muted); font-size: 0.75rem;">${bean.processLabel}</span>
+                            </div>
+                            <h3 class="h4 mb-1">${bean.name}</h3>
+                            <p class="small mb-3" style="color: var(--text-muted);"><i class="bi bi-geo-alt me-1"></i>${bean.region}</p>
+                            <p class="small mb-4" style="line-height: 1.6;">${bean.desc}</p>
+                        </div>
+                        <div class="pt-3 border-top" style="border-color: var(--border-subtle) !important;">
+                            <div class="small text-uppercase fw-bold" style="font-size: 0.68rem; color: var(--text-muted);">Catatan Rasa</div>
+                            <div class="tasting-note">${bean.notes}</div>
+                        </div>
+                    </article>
+                `;
+                beanGrid.appendChild(col);
+            });
+        }
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderBeans(btn.dataset.filter);
+            });
+        });
+
+        // 3. Logika Kalkulator Rasio Seduh
+        const doseRange = document.getElementById('doseRange');
+        const ratioRange = document.getElementById('ratioRange');
+        const doseLabel = document.getElementById('doseLabel');
+        const ratioLabel = document.getElementById('ratioLabel');
+        const waterOutput = document.getElementById('waterOutput');
+        const bloomOutput = document.getElementById('bloomOutput');
+        const brewAdvice = document.getElementById('brewAdvice');
+        const presetBtns = document.querySelectorAll('.preset-btn');
+        const copyRecipeBtn = document.getElementById('copyRecipeBtn');
+
+        function updateCalculator() {
+            const dose = parseInt(doseRange.value);
+            const ratio = parseInt(ratioRange.value);
+            const totalWater = dose * ratio;
+            const bloomWater = Math.round(dose * 2.5);
+
+            doseLabel.textContent = `${dose}g`;
+            ratioLabel.textContent = `1 : ${ratio}`;
+            waterOutput.textContent = `${totalWater} ml`;
+            bloomOutput.textContent = `${bloomWater} ml`;
+
+            if (ratio <= 13) {
+                brewAdvice.textContent = "Profil pekat (bold): cocok untuk seduhan dengan es batu atau kopi tubruk.";
+            } else if (ratio <= 16) {
+                brewAdvice.textContent = "Profil seimbang: tingkat keasaman cerah dengan body medium.";
+            } else {
+                brewAdvice.textContent = "Profil ringan (tea-like): menonjolkan aroma floral dan kejernihan rasa.";
+            }
+        }
+
+        doseRange.addEventListener('input', updateCalculator);
+        ratioRange.addEventListener('input', updateCalculator);
+
+        presetBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                doseRange.value = btn.dataset.dose;
+                ratioRange.value = btn.dataset.ratio;
+                updateCalculator();
+            });
+        });
+
+        copyRecipeBtn.addEventListener('click', () => {
+            const text = `Resep KopiSvara: ${doseRange.value}g kopi | Rasio 1:${ratioRange.value} | Total Air ${waterOutput.textContent} (Blooming ${bloomOutput.textContent})`;
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = copyRecipeBtn.textContent;
+                copyRecipeBtn.textContent = "Tersalin!";
+                setTimeout(() => copyRecipeBtn.textContent = originalText, 1800);
+            });
+        });
+
+        // 4. Toggle Tema Terang / Gelap
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const htmlEl = document.documentElement;
+
+        themeToggle.addEventListener('click', () => {
+            const current = htmlEl.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            htmlEl.setAttribute('data-theme', next);
+            themeIcon.className = next === 'light' ? 'bi bi-moon-stars' : 'bi bi-sun';
+        });
+
+        // Inisialisasi awal
+        renderBeans();
+        updateCalculator();
+    </script>
+</body>
+</html>
