@@ -1,550 +1,653 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="light">
+<html lang="id" data-theme="day">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KopiSvara — Arsip & Kalibrasi Seduh Nusantara</title>
-    
+    <title>SONIC SPECIMEN — Arsip Akustik & Sintesis Gelombang</title>
+
     <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts: Fraunces (Editorial Serif) & Plus Jakarta Sans (Clean UI) -->
+    <!-- Fonts: Space Grotesk + JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
         :root {
-            --bg-primary: #F5F1EB;
-            --bg-secondary: #EAE3D7;
-            --bg-card: #FAF8F5;
-            --text-primary: #1E252B;
-            --text-muted: #5A626A;
-            --accent-clay: #C85A32;
-            --accent-navy: #1E2A38;
-            --border-subtle: rgba(30, 37, 43, 0.12);
+            --paper: #ECE8DF;
+            --paper-alt: #E2DDD2;
+            --ink: #141413;
+            --ink-dim: #5C5A54;
+            --signal: #D94E1F;
+            --signal-2: #1F5C4A;
+            --hairline: #141413;
+            --hairline-soft: rgba(20, 20, 19, 0.22);
         }
 
-        [data-theme="dark"] {
-            --bg-primary: #14181D;
-            --bg-secondary: #1C2229;
-            --bg-card: #1F262E;
-            --text-primary: #F2EDE4;
-            --text-muted: #9BA3AB;
-            --accent-clay: #E06D44;
-            --accent-navy: #E6DFD3;
-            --border-subtle: rgba(242, 237, 228, 0.12);
+        [data-theme="night"] {
+            --paper: #121316;
+            --paper-alt: #191B20;
+            --ink: #EAE6DC;
+            --ink-dim: #9A958A;
+            --signal: #FF6B35;
+            --signal-2: #4ECDC4;
+            --hairline: #EAE6DC;
+            --hairline-soft: rgba(234, 230, 220, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            overflow-x: hidden;
+            background-color: var(--paper);
+            color: var(--ink);
+            font-family: 'Space Grotesk', sans-serif;
+            margin: 0;
+            transition: background-color 0.25s ease, color 0.25s ease;
         }
 
-        h1, h2, h3, .font-serif {
-            font-family: 'Fraunces', serif;
-            letter-spacing: -0.02em;
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        /* Custom Navbar */
-        .navbar-custom {
-            background-color: var(--bg-primary);
-            border-bottom: 1px solid var(--border-subtle);
-            padding: 1rem 0;
+        /* Top Ticker / Telemetry Bar */
+        .top-strip {
+            border-bottom: 1px solid var(--hairline);
+            font-size: 0.75rem;
+            letter-spacing: 0.04em;
+            background-color: var(--paper-alt);
         }
 
-        .brand-mark {
-            font-family: 'Fraunces', serif;
-            font-weight: 700;
-            font-size: 1.4rem;
-            color: var(--text-primary);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .brand-dot {
-            width: 10px;
-            height: 10px;
-            background-color: var(--accent-clay);
+        .live-dot {
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
+            background-color: var(--ink-dim);
             display: inline-block;
         }
 
-        /* Editorial Hero */
-        .hero-section {
-            padding: 4.5rem 0 3.5rem;
-            border-bottom: 1px solid var(--border-subtle);
+        .live-dot.active {
+            background-color: var(--signal);
+            box-shadow: 0 0 0 4px rgba(217, 78, 31, 0.22);
         }
 
-        .eyebrow-tag {
-            font-size: 0.78rem;
+        /* Brutalist / Swiss Editorial Borders */
+        .box-b {
+            border-bottom: 1px solid var(--hairline);
+        }
+
+        .box-r-md {
+            border-bottom: 1px solid var(--hairline);
+        }
+
+        @media (min-width: 768px) {
+            .box-r-md {
+                border-bottom: none;
+                border-right: 1px solid var(--hairline);
+            }
+        }
+
+        .display-specimen {
+            font-size: clamp(2.6rem, 6.5vw, 5.2rem);
+            line-height: 0.96;
+            letter-spacing: -0.04em;
+            font-weight: 700;
+        }
+
+        /* Specimen Index Row */
+        .specimen-row {
+            border-bottom: 1px solid var(--hairline-soft);
+            padding: 1.15rem 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.15s ease, padding-left 0.15s ease;
+        }
+
+        .specimen-row:hover {
+            background-color: var(--paper-alt);
+            padding-left: 1.1rem;
+        }
+
+        .specimen-row.selected {
+            background-color: var(--paper-alt);
+            border-left: 4px solid var(--signal);
+            padding-left: 1.1rem;
+        }
+
+        .tag-outline {
+            border: 1px solid var(--hairline-soft);
+            font-size: 0.72rem;
+            padding: 0.2rem 0.55rem;
             text-transform: uppercase;
-            letter-spacing: 0.14em;
+            letter-spacing: 0.05em;
+        }
+
+        /* Custom Range Input */
+        input[type="range"].synth-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            background: var(--hairline-soft);
+            outline: none;
+            border-radius: 0;
+        }
+
+        input[type="range"].synth-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 24px;
+            background: var(--signal);
+            border: 1px solid var(--ink);
+            cursor: pointer;
+        }
+
+        .btn-signal {
+            background-color: var(--signal);
+            color: #FFFFFF;
+            border: 1px solid var(--ink);
+            border-radius: 0;
             font-weight: 700;
-            color: var(--accent-clay);
-            display: inline-block;
-            margin-bottom: 1rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-size: 0.82rem;
+            padding: 0.7rem 1.25rem;
         }
 
-        .hero-title {
-            font-size: clamp(2.4rem, 5vw, 4rem);
-            line-height: 1.08;
-            font-weight: 700;
-        }
-
-        .spec-box {
-            background-color: var(--bg-secondary);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 1.5rem;
-        }
-
-        /* Filter Pills */
-        .filter-btn {
-            background: transparent;
-            border: 1px solid var(--border-subtle);
-            color: var(--text-primary);
-            padding: 0.45rem 1.1rem;
-            border-radius: 100px;
-            font-size: 0.88rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .filter-btn:hover, .filter-btn.active {
-            background-color: var(--accent-clay);
-            border-color: var(--accent-clay);
+        .btn-signal:hover {
+            filter: brightness(1.08);
             color: #FFFFFF;
         }
 
-        /* Bean Cards */
-        .bean-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 14px;
-            padding: 1.75rem;
-            height: 100%;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+        .btn-brutal {
+            background-color: transparent;
+            color: var(--ink);
+            border: 1px solid var(--hairline);
+            border-radius: 0;
+            font-size: 0.8rem;
+            padding: 0.45rem 0.85rem;
         }
 
-        .bean-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+        .btn-brutal:hover, .btn-brutal.active {
+            background-color: var(--ink);
+            color: var(--paper);
         }
 
-        .altitude-badge {
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.25rem 0.65rem;
-            border-radius: 6px;
-            background-color: var(--bg-secondary);
-            color: var(--text-muted);
-        }
-
-        .tasting-note {
-            font-size: 0.85rem;
-            color: var(--accent-clay);
-            font-weight: 600;
-        }
-
-        /* Interactive Brew Calculator */
-        .calc-panel {
-            background-color: var(--bg-secondary);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 2.25rem;
-        }
-
-        .form-range::-webkit-slider-thumb {
-            background: var(--accent-clay);
-        }
-
-        .metric-display {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 1.25rem;
-            text-align: center;
-        }
-
-        .metric-value {
-            font-family: 'Fraunces', serif;
-            font-size: 2.25rem;
-            font-weight: 700;
-            color: var(--accent-clay);
-            line-height: 1.1;
-        }
-
-        .btn-clay {
-            background-color: var(--accent-clay);
-            color: #fff;
-            border: none;
-            padding: 0.65rem 1.4rem;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: opacity 0.2s;
-        }
-
-        .btn-clay:hover {
-            opacity: 0.9;
-            color: #fff;
-        }
-
-        footer {
-            border-top: 1px solid var(--border-subtle);
-            padding: 2.5rem 0;
-            margin-top: 4rem;
-            font-size: 0.9rem;
-            color: var(--text-muted);
+        canvas#scopeCanvas {
+            width: 100%;
+            height: 150px;
+            display: block;
+            background-color: var(--paper-alt);
+            border: 1px solid var(--hairline);
         }
     </style>
 </head>
 <body>
 
-    <!-- Navigation -->
-    <nav class="navbar-custom sticky-top">
-        <div class="container d-flex justify-content-between align-items-center">
-            <a href="#" class="brand-mark">
-                <span class="brand-dot"></span> KopiSvara
-            </a>
-            <div class="d-flex align-items-center gap-3">
-                <a href="#direktori" class="text-decoration-none d-none d-md-inline" style="color: var(--text-primary); font-size: 0.92rem;">Direktori Biji</a>
-                <a href="#kalibrasi" class="text-decoration-none d-none d-md-inline" style="color: var(--text-primary); font-size: 0.92rem;">Kalibrasi Seduh</a>
-                <button id="themeToggle" class="btn btn-sm border" style="color: var(--text-primary); border-color: var(--border-subtle) !important;" title="Ubah Tema Tampilan">
-                    <i class="bi bi-moon-stars" id="themeIcon"></i>
+    <!-- Top Telemetry Bar -->
+    <div class="top-strip py-2">
+        <div class="container-fluid px-3 px-lg-4 d-flex flex-wrap justify-content-between align-items-center gap-2 mono">
+            <div class="d-flex align-items-center gap-2">
+                <span class="live-dot" id="audioDot"></span>
+                <span id="audioStatusText">AUDIO ENGINE: STANDBY</span>
+            </div>
+            <div>VOL. 04 // FIELD & SYNTHESIS ARCHIVE</div>
+            <div class="d-flex align-items-center gap-2">
+                <span>HOST: GITHUB PAGES + CUSTOM DNS</span>
+                <button id="modeToggle" class="btn btn-sm py-0 px-2 mono" style="border: 1px solid var(--hairline); color: var(--ink); font-size: 0.72rem; border-radius: 0;">
+                    NIGHT MODE
                 </button>
             </div>
         </div>
-    </nav>
+    </div>
 
-    <!-- Hero Section -->
-    <header class="hero-section">
-        <div class="container">
-            <div class="row align-items-center g-5">
-                <div class="col-lg-7">
-                    <span class="eyebrow-tag">Indeks Botani & Kalibrasi Ekstraksi</span>
-                    <h1 class="hero-title mb-4">Memetakan karakter rasa biji kopi dataran tinggi Nusantara.</h1>
-                    <p class="lead mb-4" style="color: var(--text-muted); font-size: 1.08rem; max-width: 580px;">
-                        Dokumentasi profil pascapanen, ketinggian tanam, dan kalkulator presisi rasio air untuk metode seduh manual (V60, Kalita, dan Tubruk).
-                    </p>
-                    <div class="d-flex flex-wrap gap-2">
-                        <a href="#direktori" class="btn btn-clay">Eksplorasi Arsip</a>
-                        <a href="#kalibrasi" class="btn border px-4 py-2" style="color: var(--text-primary); border-color: var(--border-subtle) !important;">Hitung Rasio Seduh</a>
-                    </div>
+    <!-- Masthead -->
+    <header class="box-b">
+        <div class="container-fluid px-3 px-lg-4 py-4 py-lg-5">
+            <div class="row align-items-end g-4">
+                <div class="col-lg-8">
+                    <div class="mono small mb-2" style="color: var(--signal);">[01] CATALOGUE OF RESONANT SIGNALS</div>
+                    <h1 class="display-specimen mb-0">SONIC<br>SPECIMEN</h1>
                 </div>
-                <div class="col-lg-5">
-                    <div class="spec-box">
-                        <div class="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom" style="border-color: var(--border-subtle) !important;">
-                            <span class="small fw-bold text-uppercase" style="letter-spacing: 0.08em;">Status Server & Hosting</span>
-                            <span class="badge bg-success-subtle text-success border border-success-subtle">Static Edge Active</span>
-                        </div>
-                        <p class="small mb-3" style="color: var(--text-muted);">
-                            Halaman ini di-deploy secara statis menggunakan <strong>GitHub Pages</strong> dengan resolusi DNS kustom domain melalui panel <strong>Niagahoster</strong>.
-                        </p>
-                        <div class="row g-2 text-center">
-                            <div class="col-4">
-                                <div class="p-2 rounded" style="background: var(--bg-card);">
-                                    <div class="fw-bold">0 ms</div>
-                                    <div class="small" style="font-size: 0.72rem; color: var(--text-muted);">Backend DB</div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="p-2 rounded" style="background: var(--bg-card);">
-                                    <div class="fw-bold">HTTPS</div>
-                                    <div class="small" style="font-size: 0.72rem; color: var(--text-muted);">Let's Encrypt</div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="p-2 rounded" style="background: var(--bg-card);">
-                                    <div class="fw-bold">CDN</div>
-                                    <div class="small" style="font-size: 0.72rem; color: var(--text-muted);">Fastly Edge</div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="col-lg-4">
+                    <p class="mb-3" style="color: var(--ink-dim); font-size: 0.96rem;">
+                        Eksperimen web statis dengan <strong>Web Audio API</strong> dan <strong>HTML5 Canvas Oscilloscope</strong>. Pilih spesimen frekuensi di bawah lalu nyalakan mesin suara untuk mendengar serta memodulasi gelombangnya secara langsung.
+                    </p>
+                    <div class="mono small" style="color: var(--ink-dim);">
+                        TIP: Klik salah satu baris spesimen untuk memuat parameter ke konsol.
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Directory Section -->
-    <section id="direktori" class="py-5">
-        <div class="container">
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4 gap-3">
-                <div>
-                    <span class="eyebrow-tag mb-1">Katalog Origin</span>
-                    <h2 class="h1 mb-0">Arsip Biji Pilihan</h2>
+    <!-- Main Split Workspace -->
+    <main class="container-fluid px-3 px-lg-4">
+        <div class="row">
+            <!-- Left Column: Specimen Catalog -->
+            <div class="col-lg-7 box-r-md py-4 pe-lg-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 pb-3 mb-2 box-b">
+                    <span class="mono small fw-bold">INDEKS SPESIMEN (06)</span>
+                    <div class="d-flex gap-1" id="waveFilters">
+                        <button class="btn-brutal mono active" data-wave="all">ALL</button>
+                        <button class="btn-brutal mono" data-wave="sine">SINE</button>
+                        <button class="btn-brutal mono" data-wave="triangle">TRI</button>
+                        <button class="btn-brutal mono" data-wave="sawtooth">SAW</button>
+                        <button class="btn-brutal mono" data-wave="noise">NOISE</button>
+                    </div>
                 </div>
-                <!-- Filter Controls -->
-                <div class="d-flex flex-wrap gap-2" id="filterContainer">
-                    <button class="filter-btn active" data-filter="all">Semua Proses</button>
-                    <button class="filter-btn" data-filter="washed">Full Washed</button>
-                    <button class="filter-btn" data-filter="natural">Natural</button>
-                    <button class="filter-btn" data-filter="honey">Honey</button>
-                </div>
+
+                <div id="specimenList"></div>
             </div>
 
-            <!-- Dynamic Cards Grid -->
-            <div class="row g-4" id="beanGrid"></div>
-        </div>
-    </section>
-
-    <!-- Interactive Brew Calculator -->
-    <section id="kalibrasi" class="py-4">
-        <div class="container">
-            <div class="calc-panel">
-                <div class="row g-4 align-items-center">
-                    <div class="col-lg-6">
-                        <span class="eyebrow-tag mb-1">Alat Bantu Barista</span>
-                        <h2 class="h2 mb-3">Kalibrasi Rasio Seduh</h2>
-                        <p class="small mb-4" style="color: var(--text-muted);">
-                            Geser parameter dosis biji kopi dan rasio ekstraksi untuk menghitung kebutuhan air serta waktu *blooming* optimal secara instan.
-                        </p>
-
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between mb-1">
-                                <label for="doseRange" class="form-label fw-semibold small">Dosis Biji Kopi (Gram)</label>
-                                <span class="fw-bold small" style="color: var(--accent-clay);" id="doseLabel">15g</span>
-                            </div>
-                            <input type="range" class="form-range" min="10" max="40" step="1" value="15" id="doseRange">
-                        </div>
-
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between mb-1">
-                                <label for="ratioRange" class="form-label fw-semibold small">Rasio Air (1 : X)</label>
-                                <span class="fw-bold small" style="color: var(--accent-clay);" id="ratioLabel">1 : 15</span>
-                            </div>
-                            <input type="range" class="form-range" min="10" max="18" step="1" value="15" id="ratioRange">
-                        </div>
-
-                        <div class="d-flex gap-2 mt-4">
-                            <button class="btn btn-sm btn-outline-secondary preset-btn" data-dose="15" data-ratio="15">Preset V60 (1:15)</button>
-                            <button class="btn btn-sm btn-outline-secondary preset-btn" data-dose="18" data-ratio="16">Preset Kalita (1:16)</button>
-                            <button class="btn btn-sm btn-outline-secondary preset-btn" data-dose="12" data-ratio="12">Preset Tubruk (1:12)</button>
-                        </div>
+            <!-- Right Column: Live Synth & Oscilloscope Console -->
+            <div class="col-lg-5 py-4 ps-lg-4">
+                <div class="sticky-top" style="top: 1.25rem;">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="mono small fw-bold">[02] LIVE WAVEFORM CONSOLE</span>
+                        <span class="mono small" id="activeCode" style="color: var(--signal);">SP-01</span>
                     </div>
 
-                    <div class="col-lg-6">
-                        <div class="row g-3">
-                            <div class="col-6">
-                                <div class="metric-display">
-                                    <div class="small text-uppercase fw-bold mb-1" style="font-size: 0.72rem; color: var(--text-muted);">Total Air Seduh</div>
-                                    <div class="metric-value" id="waterOutput">225 ml</div>
-                                    <div class="small mt-1" style="font-size: 0.78rem; color: var(--text-muted);">Suhu: 92°C – 94°C</div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="metric-display">
-                                    <div class="small text-uppercase fw-bold mb-1" style="font-size: 0.72rem; color: var(--text-muted);">Air Blooming (2.5x)</div>
-                                    <div class="metric-value" id="bloomOutput">38 ml</div>
-                                    <div class="small mt-1" style="font-size: 0.78rem; color: var(--text-muted);">Durasi: 35 detik</div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="p-3 rounded border d-flex justify-content-between align-items-center" style="background-color: var(--bg-card); border-color: var(--border-subtle) !important;">
-                                    <span class="small fw-medium" id="brewAdvice">Profil seimbang: tingkat keasaman cerah dengan body medium.</span>
-                                    <button class="btn btn-sm btn-clay ms-2" id="copyRecipeBtn">Salin Resep</button>
-                                </div>
-                            </div>
+                    <h2 class="h4 fw-bold mb-1" id="activeTitle">Sub-Bass Monolith</h2>
+                    <p class="small mb-3" id="activeNote" style="color: var(--ink-dim);">
+                        Frekuensi rendah berkarakter stabil untuk resonansi ruang tertutup.
+                    </p>
+
+                    <!-- Oscilloscope Canvas -->
+                    <canvas id="scopeCanvas" width="600" height="150" class="mb-3"></canvas>
+
+                    <!-- Transport Controls -->
+                    <div class="d-flex gap-2 mb-4">
+                        <button class="btn btn-signal flex-grow-1" id="playToggleBtn">
+                            <i class="bi bi-play-fill me-1"></i> AKTIFKAN AUDIO
+                        </button>
+                        <button class="btn-brutal mono" id="resetBtn">RESET</button>
+                    </div>
+
+                    <!-- Frequency Slider -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mono small mb-1">
+                            <label for="freqSlider">FUNDAMENTAL FREQ</label>
+                            <span id="freqReadout" class="fw-bold">110 Hz</span>
                         </div>
+                        <input type="range" class="synth-slider" id="freqSlider" min="40" max="880" step="1" value="110">
+                    </div>
+
+                    <!-- Filter Cutoff Slider -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mono small mb-1">
+                            <label for="cutoffSlider">LOW-PASS CUTOFF</label>
+                            <span id="cutoffReadout" class="fw-bold">1200 Hz</span>
+                        </div>
+                        <input type="range" class="synth-slider" id="cutoffSlider" min="150" max="6000" step="10" value="1200">
+                    </div>
+
+                    <!-- Gain Slider -->
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between mono small mb-1">
+                            <label for="gainSlider">OUTPUT GAIN</label>
+                            <span id="gainReadout" class="fw-bold">18%</span>
+                        </div>
+                        <input type="range" class="synth-slider" id="gainSlider" min="1" max="45" step="1" value="18">
+                    </div>
+
+                    <div class="mono mt-3 pt-2" style="font-size: 0.72rem; color: var(--ink-dim); border-top: 1px dashed var(--hairline-soft);">
+                        *Output dibatasi aman (maks. 45% gain) agar nyaman didengar di speaker maupun headphone.
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </main>
 
     <!-- Footer -->
-    <footer>
-        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
-            <div>
-                <strong>KopiSvara</strong> — Proyek Tugas Kuliah Komputasi Awan & Web Hosting.
-            </div>
-            <div>
-                Dihosting via GitHub Pages & Custom Domain DNS.
-            </div>
+    <footer class="box-b py-3 mt-4" style="border-top: 1px solid var(--hairline);">
+        <div class="container-fluid px-3 px-lg-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 mono small" style="color: var(--ink-dim);">
+            <div>SONIC SPECIMEN // STATIC WEB EXPERIMENT</div>
+            <div>BOOTSTRAP 5.3 + VANILLA JS + WEB AUDIO API</div>
         </div>
     </footer>
 
-    <!-- Bootstrap JS Bundle -->
+    <!-- Bootstrap Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Custom Interactive JS -->
     <script>
-        // 1. Data Arsip Kopi
-        const coffeeData = [
+        const specimens = [
             {
-                name: "Aceh Gayo Pantan Musara",
-                region: "Bener Meriah, Aceh",
-                altitude: "1.650 mdpl",
-                process: "natural",
-                processLabel: "Natural",
-                notes: "Nangka matang, cokelat hitam, anggur merah",
-                desc: "Fermentasi ceri utuh di atas para-para selama 21 hari menghasilkan body tebal dan aroma buah tropis yang intens."
+                code: "SP-01",
+                name: "Sub-Bass Monolith",
+                wave: "sine",
+                waveLabel: "SINE",
+                freq: 110,
+                cutoff: 900,
+                gain: 22,
+                meta: "A2 • 110 Hz • Pure Harmonic",
+                note: "Gelombang sinus murni tanpa overtone tajam, menghasilkan getaran fundamental yang halus."
             },
             {
-                name: "Java Preanger Puntang",
-                region: "Bandung, Jawa Barat",
-                altitude: "1.450 mdpl",
-                process: "washed",
-                processLabel: "Full Washed",
-                notes: "Jeruk limau, melati, gula aren",
-                desc: "Pencucian bersih menggunakan air pegunungan menghasilkan kejernihan rasa (clean cup) dengan keasaman sitrus yang rapi."
+                code: "SP-02",
+                name: "Wooden Flute Pulse",
+                wave: "triangle",
+                waveLabel: "TRIANGLE",
+                freq: 293,
+                cutoff: 1800,
+                gain: 18,
+                meta: "D4 • 293 Hz • Warm Odd Harmonics",
+                note: "Gelombang segitiga dengan harmonik ganjil lembut menyerupai tiupan instrumen kayu."
             },
             {
-                name: "Bali Kintamani Catur",
-                region: "Bangli, Bali",
-                altitude: "1.500 mdpl",
-                process: "honey",
-                processLabel: "Red Honey",
-                notes: "Apel merah, karamel, teh hitam",
-                desc: "Lapisan mucilage dipertahankan saat penjemuran untuk menciptakan keseimbangan rasa manis karamel dan keasaman lembut."
+                code: "SP-03",
+                name: "Brass Reed Saw",
+                wave: "sawtooth",
+                waveLabel: "SAWTOOTH",
+                freq: 146,
+                cutoff: 1100,
+                gain: 14,
+                meta: "D3 • 146 Hz • Rich Spectrum",
+                note: "Kaya akan harmonik genap dan ganjil yang disaring lewat low-pass filter untuk karakter kuningan."
             },
             {
-                name: "Flores Bajawa Ngada",
-                region: "Ngada, Nusa Tenggara Timur",
-                altitude: "1.550 mdpl",
-                process: "washed",
-                processLabel: "Full Washed",
-                notes: "Kacang panggang, vanila, tembakau manis",
-                desc: "Tumbuh di tanah vulkanik Gunung Inerie dengan naungan pohon dadap, memberikan karakter earthy yang bersih dan manis."
+                code: "SP-04",
+                name: "Coastal Wind Drift",
+                wave: "noise",
+                waveLabel: "NOISE",
+                freq: 320,
+                cutoff: 650,
+                gain: 20,
+                meta: "Filtered White Noise • Atmospheric",
+                note: "Derau acak yang dipangkas frekuensi tingginya agar terdengar seperti hembusan angin di area terbuka."
             },
             {
-                name: "Toraja Sapan Minanga",
-                region: "Tana Toraja, Sulawesi Selatan",
-                altitude: "1.700 mdpl",
-                process: "honey",
-                processLabel: "Black Honey",
-                notes: "Gula palem, rempah kayu manis, plum",
-                desc: "Pengeringan lambat di ketinggian menghasilkan kompleksitas rasa rempah dan aftertaste manis yang panjang."
+                code: "SP-05",
+                name: "Bell Harmonic 440",
+                wave: "triangle",
+                waveLabel: "TRIANGLE",
+                freq: 440,
+                cutoff: 3200,
+                gain: 15,
+                meta: "A4 • 440 Hz • Reference Pitch",
+                note: "Frekuensi standar kalibrasi akustik dengan respons filter terbuka untuk kejelasan nada."
             },
             {
-                name: "Kerinci Kayu Aro",
-                region: "Kerinci, Jambi",
-                altitude: "1.600 mdpl",
-                process: "natural",
-                processLabel: "Natural Anaerobic",
-                notes: "Stroberi, markisa, kakao",
-                desc: "Proses anaerobik terkontrol memunculkan karakter buah beri segar dengan tekstur lembut di langit-langit mulut."
+                code: "SP-06",
+                name: "Tape Static Hiss",
+                wave: "noise",
+                waveLabel: "NOISE",
+                freq: 500,
+                cutoff: 2400,
+                gain: 12,
+                meta: "Filtered Noise • Lo-Fi Texture",
+                note: "Tekstur butiran suara analog yang memberikan kesan ruang pada komposisi eksperimental."
             }
         ];
 
-        // 2. Render Kartu Biji Kopi & Filter
-        const beanGrid = document.getElementById('beanGrid');
-        const filterBtns = document.querySelectorAll('.filter-btn');
+        let selectedSpecimen = specimens[0];
+        let currentWaveFilter = 'all';
 
-        function renderBeans(filter = 'all') {
-            beanGrid.innerHTML = '';
-            const filtered = filter === 'all' 
-                ? coffeeData 
-                : coffeeData.filter(item => item.process === filter);
+        // DOM Elements
+        const specimenListEl = document.getElementById('specimenList');
+        const waveFilterBtns = document.querySelectorAll('#waveFilters button');
+        const activeCodeEl = document.getElementById('activeCode');
+        const activeTitleEl = document.getElementById('activeTitle');
+        const activeNoteEl = document.getElementById('activeNote');
 
-            filtered.forEach(bean => {
-                const col = document.createElement('div');
-                col.className = 'col-md-6 col-lg-4';
-                col.innerHTML = `
-                    <article class="bean-card">
-                        <div>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="altitude-badge">${bean.altitude}</span>
-                                <span class="small fw-semibold text-uppercase" style="color: var(--text-muted); font-size: 0.75rem;">${bean.processLabel}</span>
-                            </div>
-                            <h3 class="h4 mb-1">${bean.name}</h3>
-                            <p class="small mb-3" style="color: var(--text-muted);"><i class="bi bi-geo-alt me-1"></i>${bean.region}</p>
-                            <p class="small mb-4" style="line-height: 1.6;">${bean.desc}</p>
-                        </div>
-                        <div class="pt-3 border-top" style="border-color: var(--border-subtle) !important;">
-                            <div class="small text-uppercase fw-bold" style="font-size: 0.68rem; color: var(--text-muted);">Catatan Rasa</div>
-                            <div class="tasting-note">${bean.notes}</div>
-                        </div>
-                    </article>
-                `;
-                beanGrid.appendChild(col);
-            });
+        const freqSlider = document.getElementById('freqSlider');
+        const cutoffSlider = document.getElementById('cutoffSlider');
+        const gainSlider = document.getElementById('gainSlider');
+
+        const freqReadout = document.getElementById('freqReadout');
+        const cutoffReadout = document.getElementById('cutoffReadout');
+        const gainReadout = document.getElementById('gainReadout');
+
+        const playToggleBtn = document.getElementById('playToggleBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const audioDot = document.getElementById('audioDot');
+        const audioStatusText = document.getElementById('audioStatusText');
+
+        // Web Audio API State
+        let audioCtx = null;
+        let sourceNode = null;
+        let filterNode = null;
+        let gainNode = null;
+        let analyserNode = null;
+        let isPlaying = false;
+
+        function createNoiseBuffer(ctx) {
+            const length = ctx.sampleRate * 2;
+            const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < length; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+            return buffer;
         }
 
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                filterBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                renderBeans(btn.dataset.filter);
-            });
-        });
+        function initAudioGraph() {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new AudioContextClass();
 
-        // 3. Logika Kalkulator Rasio Seduh
-        const doseRange = document.getElementById('doseRange');
-        const ratioRange = document.getElementById('ratioRange');
-        const doseLabel = document.getElementById('doseLabel');
-        const ratioLabel = document.getElementById('ratioLabel');
-        const waterOutput = document.getElementById('waterOutput');
-        const bloomOutput = document.getElementById('bloomOutput');
-        const brewAdvice = document.getElementById('brewAdvice');
-        const presetBtns = document.querySelectorAll('.preset-btn');
-        const copyRecipeBtn = document.getElementById('copyRecipeBtn');
+            filterNode = audioCtx.createBiquadFilter();
+            filterNode.type = 'lowpass';
+            filterNode.frequency.value = Number(cutoffSlider.value);
 
-        function updateCalculator() {
-            const dose = parseInt(doseRange.value);
-            const ratio = parseInt(ratioRange.value);
-            const totalWater = dose * ratio;
-            const bloomWater = Math.round(dose * 2.5);
+            gainNode = audioCtx.createGain();
+            gainNode.gain.value = Number(gainSlider.value) / 100;
 
-            doseLabel.textContent = `${dose}g`;
-            ratioLabel.textContent = `1 : ${ratio}`;
-            waterOutput.textContent = `${totalWater} ml`;
-            bloomOutput.textContent = `${bloomWater} ml`;
+            analyserNode = audioCtx.createAnalyser();
+            analyserNode.fftSize = 1024;
 
-            if (ratio <= 13) {
-                brewAdvice.textContent = "Profil pekat (bold): cocok untuk seduhan dengan es batu atau kopi tubruk.";
-            } else if (ratio <= 16) {
-                brewAdvice.textContent = "Profil seimbang: tingkat keasaman cerah dengan body medium.";
+            filterNode.connect(gainNode);
+            gainNode.connect(analyserNode);
+            analyserNode.connect(audioCtx.destination);
+        }
+
+        function rebuildSource() {
+            if (!audioCtx) return;
+            if (sourceNode) {
+                try { sourceNode.stop(); } catch (e) {}
+                sourceNode.disconnect();
+            }
+
+            if (selectedSpecimen.wave === 'noise') {
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = createNoiseBuffer(audioCtx);
+                noise.loop = true;
+                noise.connect(filterNode);
+                noise.start();
+                sourceNode = noise;
             } else {
-                brewAdvice.textContent = "Profil ringan (tea-like): menonjolkan aroma floral dan kejernihan rasa.";
+                const osc = audioCtx.createOscillator();
+                osc.type = selectedSpecimen.wave;
+                osc.frequency.setValueAtTime(Number(freqSlider.value), audioCtx.currentTime);
+                osc.connect(filterNode);
+                osc.start();
+                sourceNode = osc;
             }
         }
 
-        doseRange.addEventListener('input', updateCalculator);
-        ratioRange.addEventListener('input', updateCalculator);
+        function startAudio() {
+            if (!audioCtx) initAudioGraph();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            rebuildSource();
+            isPlaying = true;
+            audioDot.classList.add('active');
+            audioStatusText.textContent = 'AUDIO ENGINE: LIVE SYNTHESIS';
+            playToggleBtn.innerHTML = '<i class="bi bi-stop-fill me-1"></i> HENTIKAN AUDIO';
+        }
 
-        presetBtns.forEach(btn => {
+        function stopAudio() {
+            if (sourceNode) {
+                try { sourceNode.stop(); } catch (e) {}
+                sourceNode.disconnect();
+                sourceNode = null;
+            }
+            isPlaying = false;
+            audioDot.classList.remove('active');
+            audioStatusText.textContent = 'AUDIO ENGINE: STANDBY';
+            playToggleBtn.innerHTML = '<i class="bi bi-play-fill me-1"></i> AKTIFKAN AUDIO';
+        }
+
+        function syncReadouts() {
+            freqReadout.textContent = `${freqSlider.value} Hz`;
+            cutoffReadout.textContent = `${cutoffSlider.value} Hz`;
+            gainReadout.textContent = `${gainSlider.value}%`;
+
+            if (audioCtx && sourceNode && selectedSpecimen.wave !== 'noise') {
+                sourceNode.frequency.setTargetAtTime(Number(freqSlider.value), audioCtx.currentTime, 0.02);
+            }
+            if (audioCtx && filterNode) {
+                filterNode.frequency.setTargetAtTime(Number(cutoffSlider.value), audioCtx.currentTime, 0.02);
+            }
+            if (audioCtx && gainNode) {
+                gainNode.gain.setTargetAtTime(Number(gainSlider.value) / 100, audioCtx.currentTime, 0.02);
+            }
+        }
+
+        function loadSpecimen(spec, restartIfPlaying = true) {
+            selectedSpecimen = spec;
+            activeCodeEl.textContent = spec.code;
+            activeTitleEl.textContent = spec.name;
+            activeNoteEl.textContent = spec.note;
+
+            freqSlider.value = spec.freq;
+            cutoffSlider.value = spec.cutoff;
+            gainSlider.value = spec.gain;
+            syncReadouts();
+            renderSpecimens();
+
+            if (isPlaying && restartIfPlaying) {
+                rebuildSource();
+            }
+        }
+
+        function renderSpecimens() {
+            const list = currentWaveFilter === 'all'
+                ? specimens
+                : specimens.filter(s => s.wave === currentWaveFilter);
+
+            specimenListEl.innerHTML = list.map(spec => {
+                const isSelected = spec.code === selectedSpecimen.code;
+                return `
+                    <div class="specimen-row ${isSelected ? 'selected' : ''}" data-code="${spec.code}">
+                        <div class="d-flex justify-content-between align-items-start gap-2">
+                            <div>
+                                <div class="mono small" style="color: var(--signal);">${spec.code} // ${spec.meta}</div>
+                                <div class="fw-bold fs-5">${spec.name}</div>
+                            </div>
+                            <span class="tag-outline mono">${spec.waveLabel}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.querySelectorAll('.specimen-row').forEach(row => {
+                row.addEventListener('click', () => {
+                    const found = specimens.find(s => s.code === row.dataset.code);
+                    if (found) loadSpecimen(found, true);
+                });
+            });
+        }
+
+        // Oscilloscope Renderer
+        const canvas = document.getElementById('scopeCanvas');
+        const ctx2d = canvas.getContext('2d');
+
+        function drawScope() {
+            requestAnimationFrame(drawScope);
+            const w = canvas.width;
+            const h = canvas.height;
+            ctx2d.clearRect(0, 0, w, h);
+
+            const styles = getComputedStyle(document.documentElement);
+            const signalColor = styles.getPropertyValue('--signal').trim();
+            const gridColor = styles.getPropertyValue('--hairline-soft').trim();
+
+            // Center line
+            ctx2d.strokeStyle = gridColor;
+            ctx2d.lineWidth = 1;
+            ctx2d.beginPath();
+            ctx2d.moveTo(0, h / 2);
+            ctx2d.lineTo(w, h / 2);
+            ctx2d.stroke();
+
+            ctx2d.strokeStyle = signalColor;
+            ctx2d.lineWidth = 2.2;
+            ctx2d.beginPath();
+
+            if (isPlaying && analyserNode) {
+                const bufferLength = analyserNode.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+                analyserNode.getByteTimeDomainData(dataArray);
+
+                const sliceWidth = w / bufferLength;
+                let x = 0;
+                for (let i = 0; i < bufferLength; i++) {
+                    const v = dataArray[i] / 128.0;
+                    const y = (v * h) / 2;
+                    if (i === 0) ctx2d.moveTo(x, y);
+                    else ctx2d.lineTo(x, y);
+                    x += sliceWidth;
+                }
+            } else {
+                // Idle preview curve based on selected waveform & frequency
+                const cycles = Math.max(1.5, Math.min(8, Number(freqSlider.value) / 90));
+                for (let x = 0; x <= w; x++) {
+                    const phase = (x / w) * Math.PI * 2 * cycles;
+                    let sample = 0;
+                    if (selectedSpecimen.wave === 'sine') {
+                        sample = Math.sin(phase);
+                    } else if (selectedSpecimen.wave === 'triangle') {
+                        sample = (2 / Math.PI) * Math.asin(Math.sin(phase));
+                    } else if (selectedSpecimen.wave === 'sawtooth') {
+                        sample = 2 * ((phase / (Math.PI * 2)) % 1) - 1;
+                    } else {
+                        sample = Math.sin(phase) * Math.cos(phase * 3.7) * 0.7;
+                    }
+                    const amp = (Number(gainSlider.value) / 45) * (h * 0.36);
+                    const y = h / 2 + sample * amp;
+                    if (x === 0) ctx2d.moveTo(x, y);
+                    else ctx2d.lineTo(x, y);
+                }
+            }
+            ctx2d.stroke();
+        }
+
+        // Events
+        playToggleBtn.addEventListener('click', () => {
+            if (isPlaying) stopAudio();
+            else startAudio();
+        });
+
+        resetBtn.addEventListener('click', () => {
+            loadSpecimen(selectedSpecimen, true);
+        });
+
+        freqSlider.addEventListener('input', syncReadouts);
+        cutoffSlider.addEventListener('input', syncReadouts);
+        gainSlider.addEventListener('input', syncReadouts);
+
+        waveFilterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                doseRange.value = btn.dataset.dose;
-                ratioRange.value = btn.dataset.ratio;
-                updateCalculator();
+                waveFilterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentWaveFilter = btn.dataset.wave;
+                renderSpecimens();
             });
         });
 
-        copyRecipeBtn.addEventListener('click', () => {
-            const text = `Resep KopiSvara: ${doseRange.value}g kopi | Rasio 1:${ratioRange.value} | Total Air ${waterOutput.textContent} (Blooming ${bloomOutput.textContent})`;
-            navigator.clipboard.writeText(text).then(() => {
-                const originalText = copyRecipeBtn.textContent;
-                copyRecipeBtn.textContent = "Tersalin!";
-                setTimeout(() => copyRecipeBtn.textContent = originalText, 1800);
-            });
+        const modeToggle = document.getElementById('modeToggle');
+        modeToggle.addEventListener('click', () => {
+            const html = document.documentElement;
+            const next = html.getAttribute('data-theme') === 'day' ? 'night' : 'day';
+            html.setAttribute('data-theme', next);
+            modeToggle.textContent = next === 'night' ? 'DAY MODE' : 'NIGHT MODE';
         });
 
-        // 4. Toggle Tema Terang / Gelap
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
-        const htmlEl = document.documentElement;
-
-        themeToggle.addEventListener('click', () => {
-            const current = htmlEl.getAttribute('data-theme');
-            const next = current === 'light' ? 'dark' : 'light';
-            htmlEl.setAttribute('data-theme', next);
-            themeIcon.className = next === 'light' ? 'bi bi-moon-stars' : 'bi bi-sun';
-        });
-
-        // Inisialisasi awal
-        renderBeans();
-        updateCalculator();
+        // Init
+        loadSpecimen(specimens[0], false);
+        drawScope();
     </script>
 </body>
 </html>
