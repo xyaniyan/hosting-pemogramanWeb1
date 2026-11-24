@@ -1,301 +1,146 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="day">
+<html lang="id" data-mode="paper">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SONIC SPECIMEN — Arsip Akustik & Sintesis Gelombang</title>
+    <title>ATMOS // LOG — Telemetri Atmosfer & Simulasi Barometrik</title>
 
     <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Fonts: Space Grotesk + JetBrains Mono -->
+    <!-- Google Fonts: Space Grotesk + JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <style>
-        :root {
-            --paper: #ECE8DF;
-            --paper-alt: #E2DDD2;
-            --ink: #141413;
-            --ink-dim: #5C5A54;
-            --signal: #D94E1F;
-            --signal-2: #1F5C4A;
-            --hairline: #141413;
-            --hairline-soft: rgba(20, 20, 19, 0.22);
-        }
-
-        [data-theme="night"] {
-            --paper: #121316;
-            --paper-alt: #191B20;
-            --ink: #EAE6DC;
-            --ink-dim: #9A958A;
-            --signal: #FF6B35;
-            --signal-2: #4ECDC4;
-            --hairline: #EAE6DC;
-            --hairline-soft: rgba(234, 230, 220, 0.2);
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: var(--paper);
-            color: var(--ink);
-            font-family: 'Space Grotesk', sans-serif;
-            margin: 0;
-            transition: background-color 0.25s ease, color 0.25s ease;
-        }
-
-        .mono {
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* Top Ticker / Telemetry Bar */
-        .top-strip {
-            border-bottom: 1px solid var(--hairline);
-            font-size: 0.75rem;
-            letter-spacing: 0.04em;
-            background-color: var(--paper-alt);
-        }
-
-        .live-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: var(--ink-dim);
-            display: inline-block;
-        }
-
-        .live-dot.active {
-            background-color: var(--signal);
-            box-shadow: 0 0 0 4px rgba(217, 78, 31, 0.22);
-        }
-
-        /* Brutalist / Swiss Editorial Borders */
-        .box-b {
-            border-bottom: 1px solid var(--hairline);
-        }
-
-        .box-r-md {
-            border-bottom: 1px solid var(--hairline);
-        }
-
-        @media (min-width: 768px) {
-            .box-r-md {
-                border-bottom: none;
-                border-right: 1px solid var(--hairline);
-            }
-        }
-
-        .display-specimen {
-            font-size: clamp(2.6rem, 6.5vw, 5.2rem);
-            line-height: 0.96;
-            letter-spacing: -0.04em;
-            font-weight: 700;
-        }
-
-        /* Specimen Index Row */
-        .specimen-row {
-            border-bottom: 1px solid var(--hairline-soft);
-            padding: 1.15rem 0.75rem;
-            cursor: pointer;
-            transition: background-color 0.15s ease, padding-left 0.15s ease;
-        }
-
-        .specimen-row:hover {
-            background-color: var(--paper-alt);
-            padding-left: 1.1rem;
-        }
-
-        .specimen-row.selected {
-            background-color: var(--paper-alt);
-            border-left: 4px solid var(--signal);
-            padding-left: 1.1rem;
-        }
-
-        .tag-outline {
-            border: 1px solid var(--hairline-soft);
-            font-size: 0.72rem;
-            padding: 0.2rem 0.55rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* Custom Range Input */
-        input[type="range"].synth-slider {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 100%;
-            height: 6px;
-            background: var(--hairline-soft);
-            outline: none;
-            border-radius: 0;
-        }
-
-        input[type="range"].synth-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 24px;
-            background: var(--signal);
-            border: 1px solid var(--ink);
-            cursor: pointer;
-        }
-
-        .btn-signal {
-            background-color: var(--signal);
-            color: #FFFFFF;
-            border: 1px solid var(--ink);
-            border-radius: 0;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            font-size: 0.82rem;
-            padding: 0.7rem 1.25rem;
-        }
-
-        .btn-signal:hover {
-            filter: brightness(1.08);
-            color: #FFFFFF;
-        }
-
-        .btn-brutal {
-            background-color: transparent;
-            color: var(--ink);
-            border: 1px solid var(--hairline);
-            border-radius: 0;
-            font-size: 0.8rem;
-            padding: 0.45rem 0.85rem;
-        }
-
-        .btn-brutal:hover, .btn-brutal.active {
-            background-color: var(--ink);
-            color: var(--paper);
-        }
-
-        canvas#scopeCanvas {
-            width: 100%;
-            height: 150px;
-            display: block;
-            background-color: var(--paper-alt);
-            border: 1px solid var(--hairline);
-        }
-    </style>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Top Telemetry Bar -->
-    <div class="top-strip py-2">
+    <!-- Top Telemetry Ticker -->
+    <div class="telemetry-bar py-2">
         <div class="container-fluid px-3 px-lg-4 d-flex flex-wrap justify-content-between align-items-center gap-2 mono">
             <div class="d-flex align-items-center gap-2">
-                <span class="live-dot" id="audioDot"></span>
-                <span id="audioStatusText">AUDIO ENGINE: STANDBY</span>
+                <span class="pulse-indicator" id="sensorDot"></span>
+                <span id="sensorStatus">BAROGRAPH: NOMINAL</span>
             </div>
-            <div>VOL. 04 // FIELD & SYNTHESIS ARCHIVE</div>
+            <div>STASIUN // -6.3918° S, 106.7621° E (ELEV. 78M)</div>
             <div class="d-flex align-items-center gap-2">
-                <span>HOST: GITHUB PAGES + CUSTOM DNS</span>
-                <button id="modeToggle" class="btn btn-sm py-0 px-2 mono" style="border: 1px solid var(--hairline); color: var(--ink); font-size: 0.72rem; border-radius: 0;">
-                    NIGHT MODE
+                <span id="utcClock">UTC 00:00:00</span>
+                <button id="surfaceToggle" class="btn btn-sm py-0 px-2 mono btn-grid">
+                    NIGHT RADAR
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Masthead -->
-    <header class="box-b">
+    <!-- Header / Masthead -->
+    <header class="rule-b">
         <div class="container-fluid px-3 px-lg-4 py-4 py-lg-5">
             <div class="row align-items-end g-4">
                 <div class="col-lg-8">
-                    <div class="mono small mb-2" style="color: var(--signal);">[01] CATALOGUE OF RESONANT SIGNALS</div>
-                    <h1 class="display-specimen mb-0">SONIC<br>SPECIMEN</h1>
+                    <div class="mono small mb-2 text-clay">[OBS-09] ARCHIVE OF ATMOSPHERIC DYNAMICS</div>
+                    <h1 class="hero-display mb-0">ATMOS<br>// LOG</h1>
                 </div>
                 <div class="col-lg-4">
-                    <p class="mb-3" style="color: var(--ink-dim); font-size: 0.96rem;">
-                        Eksperimen web statis dengan <strong>Web Audio API</strong> dan <strong>HTML5 Canvas Oscilloscope</strong>. Pilih spesimen frekuensi di bawah lalu nyalakan mesin suara untuk mendengar serta memodulasi gelombangnya secara langsung.
+                    <p class="mb-3 text-dim">
+                        Arsip pengamatan mikroklimat dan simulator vektor angin berbasis <strong>Bootstrap 5.3</strong>, <strong>HTML5 Canvas</strong>, dan <strong>Modular Vanilla JS</strong>. Pilih sektor observasi untuk memuat profil tekanan udara atau uji turbulensi secara langsung.
                     </p>
-                    <div class="mono small" style="color: var(--ink-dim);">
-                        TIP: Klik salah satu baris spesimen untuk memuat parameter ke konsol.
+                    <div class="mono small text-dim">
+                        STATUS: STATIC DEPLOYMENT // SEPARATED ASSETS
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Split Workspace -->
+    <!-- Main Workspace -->
     <main class="container-fluid px-3 px-lg-4">
         <div class="row">
-            <!-- Left Column: Specimen Catalog -->
-            <div class="col-lg-7 box-r-md py-4 pe-lg-4">
-                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 pb-3 mb-2 box-b">
-                    <span class="mono small fw-bold">INDEKS SPESIMEN (06)</span>
-                    <div class="d-flex gap-1" id="waveFilters">
-                        <button class="btn-brutal mono active" data-wave="all">ALL</button>
-                        <button class="btn-brutal mono" data-wave="sine">SINE</button>
-                        <button class="btn-brutal mono" data-wave="triangle">TRI</button>
-                        <button class="btn-brutal mono" data-wave="sawtooth">SAW</button>
-                        <button class="btn-brutal mono" data-wave="noise">NOISE</button>
+            <!-- Left Column: Observation Logs -->
+            <div class="col-lg-7 rule-r-lg py-4 pe-lg-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 pb-3 mb-2 rule-b">
+                    <span class="mono small fw-bold">LOG PENGAMATAN SEKTOR (06)</span>
+                    <div class="d-flex flex-wrap gap-1" id="zoneFilters">
+                        <button class="btn-grid mono active" data-zone="all">SEMUA</button>
+                        <button class="btn-grid mono" data-zone="tropis">KONVEKTIF</button>
+                        <button class="btn-grid mono" data-zone="maritim">MARITIM</button>
+                        <button class="btn-grid mono" data-zone="orografis">OROGRAFIS</button>
                     </div>
                 </div>
 
-                <div id="specimenList"></div>
+                <div id="sectorList"></div>
             </div>
 
-            <!-- Right Column: Live Synth & Oscilloscope Console -->
+            <!-- Right Column: Wind Vector & Barometric Simulator -->
             <div class="col-lg-5 py-4 ps-lg-4">
                 <div class="sticky-top" style="top: 1.25rem;">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="mono small fw-bold">[02] LIVE WAVEFORM CONSOLE</span>
-                        <span class="mono small" id="activeCode" style="color: var(--signal);">SP-01</span>
+                        <span class="mono small fw-bold">[SIM-02] WIND & PRESSURE TUNNEL</span>
+                        <span class="mono small text-clay fw-bold" id="activeSectorCode">SEC-01</span>
                     </div>
 
-                    <h2 class="h4 fw-bold mb-1" id="activeTitle">Sub-Bass Monolith</h2>
-                    <p class="small mb-3" id="activeNote" style="color: var(--ink-dim);">
-                        Frekuensi rendah berkarakter stabil untuk resonansi ruang tertutup.
+                    <h2 class="h4 fw-bold mb-1" id="activeSectorName">Lembah Cisadane — Pagi</h2>
+                    <p class="small mb-3 text-dim" id="activeSectorSummary">
+                        Inversi suhu permukaan rendah dengan kabut tipis bergerak perlahan ke arah utara.
                     </p>
 
-                    <!-- Oscilloscope Canvas -->
-                    <canvas id="scopeCanvas" width="600" height="150" class="mb-3"></canvas>
+                    <!-- Particle & Vector Canvas -->
+                    <canvas id="windCanvas" width="600" height="190" class="mb-3"></canvas>
 
-                    <!-- Transport Controls -->
-                    <div class="d-flex gap-2 mb-4">
-                        <button class="btn btn-signal flex-grow-1" id="playToggleBtn">
-                            <i class="bi bi-play-fill me-1"></i> AKTIFKAN AUDIO
+                    <!-- Live Metric Readout Strip -->
+                    <div class="row g-2 mb-3 text-center mono">
+                        <div class="col-4">
+                            <div class="metric-cell">
+                                <div class="metric-label">TEKANAN</div>
+                                <div class="metric-val" id="pressureVal">1012 hPa</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="metric-cell">
+                                <div class="metric-label">TITIK EMBUN</div>
+                                <div class="metric-val" id="dewPointVal">21.4 °C</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="metric-cell">
+                                <div class="metric-label">KLASIFIKASI</div>
+                                <div class="metric-val text-clay" id="beaufortVal">BF-3</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mono small mb-1">
+                            <label for="windSpeedSlider">KECEPATAN ANGIN (KNOT)</label>
+                            <span id="windSpeedReadout" class="fw-bold">12 kt</span>
+                        </div>
+                        <input type="range" class="atmos-slider" id="windSpeedSlider" min="2" max="48" step="1" value="12">
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mono small mb-1">
+                            <label for="azimuthSlider">AZIMUTH VEKTOR (°)</label>
+                            <span id="azimuthReadout" class="fw-bold">045° NE</span>
+                        </div>
+                        <input type="range" class="atmos-slider" id="azimuthSlider" min="0" max="359" step="1" value="45">
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mono small mb-1">
+                            <label for="humiditySlider">KELEMBAPAN RELATIF (%)</label>
+                            <span id="humidityReadout" class="fw-bold">78%</span>
+                        </div>
+                        <input type="range" class="atmos-slider" id="humiditySlider" min="30" max="100" step="1" value="78">
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-clay-solid flex-grow-1 mono" id="gustTriggerBtn">
+                            <i class="bi bi-wind me-1"></i> SIMULASI HEMBUSAN (GUST)
                         </button>
-                        <button class="btn-brutal mono" id="resetBtn">RESET</button>
-                    </div>
-
-                    <!-- Frequency Slider -->
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mono small mb-1">
-                            <label for="freqSlider">FUNDAMENTAL FREQ</label>
-                            <span id="freqReadout" class="fw-bold">110 Hz</span>
-                        </div>
-                        <input type="range" class="synth-slider" id="freqSlider" min="40" max="880" step="1" value="110">
-                    </div>
-
-                    <!-- Filter Cutoff Slider -->
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mono small mb-1">
-                            <label for="cutoffSlider">LOW-PASS CUTOFF</label>
-                            <span id="cutoffReadout" class="fw-bold">1200 Hz</span>
-                        </div>
-                        <input type="range" class="synth-slider" id="cutoffSlider" min="150" max="6000" step="10" value="1200">
-                    </div>
-
-                    <!-- Gain Slider -->
-                    <div class="mb-2">
-                        <div class="d-flex justify-content-between mono small mb-1">
-                            <label for="gainSlider">OUTPUT GAIN</label>
-                            <span id="gainReadout" class="fw-bold">18%</span>
-                        </div>
-                        <input type="range" class="synth-slider" id="gainSlider" min="1" max="45" step="1" value="18">
-                    </div>
-
-                    <div class="mono mt-3 pt-2" style="font-size: 0.72rem; color: var(--ink-dim); border-top: 1px dashed var(--hairline-soft);">
-                        *Output dibatasi aman (maks. 45% gain) agar nyaman didengar di speaker maupun headphone.
+                        <button class="btn-grid mono" id="resetSectorBtn">RESET</button>
                     </div>
                 </div>
             </div>
@@ -303,351 +148,16 @@
     </main>
 
     <!-- Footer -->
-    <footer class="box-b py-3 mt-4" style="border-top: 1px solid var(--hairline);">
-        <div class="container-fluid px-3 px-lg-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 mono small" style="color: var(--ink-dim);">
-            <div>SONIC SPECIMEN // STATIC WEB EXPERIMENT</div>
-            <div>BOOTSTRAP 5.3 + VANILLA JS + WEB AUDIO API</div>
+    <footer class="py-3 mt-4 rule-t">
+        <div class="container-fluid px-3 px-lg-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 mono small text-dim">
+            <div>ATMOS // LOG — OBSERVATORY STATIC ARCHIVE</div>
+            <div>HTML5 + CSS3 + VANILLA JS + BOOTSTRAP 5.3</div>
         </div>
     </footer>
 
-    <!-- Bootstrap Bundle -->
+    <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        const specimens = [
-            {
-                code: "SP-01",
-                name: "Sub-Bass Monolith",
-                wave: "sine",
-                waveLabel: "SINE",
-                freq: 110,
-                cutoff: 900,
-                gain: 22,
-                meta: "A2 • 110 Hz • Pure Harmonic",
-                note: "Gelombang sinus murni tanpa overtone tajam, menghasilkan getaran fundamental yang halus."
-            },
-            {
-                code: "SP-02",
-                name: "Wooden Flute Pulse",
-                wave: "triangle",
-                waveLabel: "TRIANGLE",
-                freq: 293,
-                cutoff: 1800,
-                gain: 18,
-                meta: "D4 • 293 Hz • Warm Odd Harmonics",
-                note: "Gelombang segitiga dengan harmonik ganjil lembut menyerupai tiupan instrumen kayu."
-            },
-            {
-                code: "SP-03",
-                name: "Brass Reed Saw",
-                wave: "sawtooth",
-                waveLabel: "SAWTOOTH",
-                freq: 146,
-                cutoff: 1100,
-                gain: 14,
-                meta: "D3 • 146 Hz • Rich Spectrum",
-                note: "Kaya akan harmonik genap dan ganjil yang disaring lewat low-pass filter untuk karakter kuningan."
-            },
-            {
-                code: "SP-04",
-                name: "Coastal Wind Drift",
-                wave: "noise",
-                waveLabel: "NOISE",
-                freq: 320,
-                cutoff: 650,
-                gain: 20,
-                meta: "Filtered White Noise • Atmospheric",
-                note: "Derau acak yang dipangkas frekuensi tingginya agar terdengar seperti hembusan angin di area terbuka."
-            },
-            {
-                code: "SP-05",
-                name: "Bell Harmonic 440",
-                wave: "triangle",
-                waveLabel: "TRIANGLE",
-                freq: 440,
-                cutoff: 3200,
-                gain: 15,
-                meta: "A4 • 440 Hz • Reference Pitch",
-                note: "Frekuensi standar kalibrasi akustik dengan respons filter terbuka untuk kejelasan nada."
-            },
-            {
-                code: "SP-06",
-                name: "Tape Static Hiss",
-                wave: "noise",
-                waveLabel: "NOISE",
-                freq: 500,
-                cutoff: 2400,
-                gain: 12,
-                meta: "Filtered Noise • Lo-Fi Texture",
-                note: "Tekstur butiran suara analog yang memberikan kesan ruang pada komposisi eksperimental."
-            }
-        ];
-
-        let selectedSpecimen = specimens[0];
-        let currentWaveFilter = 'all';
-
-        // DOM Elements
-        const specimenListEl = document.getElementById('specimenList');
-        const waveFilterBtns = document.querySelectorAll('#waveFilters button');
-        const activeCodeEl = document.getElementById('activeCode');
-        const activeTitleEl = document.getElementById('activeTitle');
-        const activeNoteEl = document.getElementById('activeNote');
-
-        const freqSlider = document.getElementById('freqSlider');
-        const cutoffSlider = document.getElementById('cutoffSlider');
-        const gainSlider = document.getElementById('gainSlider');
-
-        const freqReadout = document.getElementById('freqReadout');
-        const cutoffReadout = document.getElementById('cutoffReadout');
-        const gainReadout = document.getElementById('gainReadout');
-
-        const playToggleBtn = document.getElementById('playToggleBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const audioDot = document.getElementById('audioDot');
-        const audioStatusText = document.getElementById('audioStatusText');
-
-        // Web Audio API State
-        let audioCtx = null;
-        let sourceNode = null;
-        let filterNode = null;
-        let gainNode = null;
-        let analyserNode = null;
-        let isPlaying = false;
-
-        function createNoiseBuffer(ctx) {
-            const length = ctx.sampleRate * 2;
-            const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
-            const data = buffer.getChannelData(0);
-            for (let i = 0; i < length; i++) {
-                data[i] = Math.random() * 2 - 1;
-            }
-            return buffer;
-        }
-
-        function initAudioGraph() {
-            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-            audioCtx = new AudioContextClass();
-
-            filterNode = audioCtx.createBiquadFilter();
-            filterNode.type = 'lowpass';
-            filterNode.frequency.value = Number(cutoffSlider.value);
-
-            gainNode = audioCtx.createGain();
-            gainNode.gain.value = Number(gainSlider.value) / 100;
-
-            analyserNode = audioCtx.createAnalyser();
-            analyserNode.fftSize = 1024;
-
-            filterNode.connect(gainNode);
-            gainNode.connect(analyserNode);
-            analyserNode.connect(audioCtx.destination);
-        }
-
-        function rebuildSource() {
-            if (!audioCtx) return;
-            if (sourceNode) {
-                try { sourceNode.stop(); } catch (e) {}
-                sourceNode.disconnect();
-            }
-
-            if (selectedSpecimen.wave === 'noise') {
-                const noise = audioCtx.createBufferSource();
-                noise.buffer = createNoiseBuffer(audioCtx);
-                noise.loop = true;
-                noise.connect(filterNode);
-                noise.start();
-                sourceNode = noise;
-            } else {
-                const osc = audioCtx.createOscillator();
-                osc.type = selectedSpecimen.wave;
-                osc.frequency.setValueAtTime(Number(freqSlider.value), audioCtx.currentTime);
-                osc.connect(filterNode);
-                osc.start();
-                sourceNode = osc;
-            }
-        }
-
-        function startAudio() {
-            if (!audioCtx) initAudioGraph();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            rebuildSource();
-            isPlaying = true;
-            audioDot.classList.add('active');
-            audioStatusText.textContent = 'AUDIO ENGINE: LIVE SYNTHESIS';
-            playToggleBtn.innerHTML = '<i class="bi bi-stop-fill me-1"></i> HENTIKAN AUDIO';
-        }
-
-        function stopAudio() {
-            if (sourceNode) {
-                try { sourceNode.stop(); } catch (e) {}
-                sourceNode.disconnect();
-                sourceNode = null;
-            }
-            isPlaying = false;
-            audioDot.classList.remove('active');
-            audioStatusText.textContent = 'AUDIO ENGINE: STANDBY';
-            playToggleBtn.innerHTML = '<i class="bi bi-play-fill me-1"></i> AKTIFKAN AUDIO';
-        }
-
-        function syncReadouts() {
-            freqReadout.textContent = `${freqSlider.value} Hz`;
-            cutoffReadout.textContent = `${cutoffSlider.value} Hz`;
-            gainReadout.textContent = `${gainSlider.value}%`;
-
-            if (audioCtx && sourceNode && selectedSpecimen.wave !== 'noise') {
-                sourceNode.frequency.setTargetAtTime(Number(freqSlider.value), audioCtx.currentTime, 0.02);
-            }
-            if (audioCtx && filterNode) {
-                filterNode.frequency.setTargetAtTime(Number(cutoffSlider.value), audioCtx.currentTime, 0.02);
-            }
-            if (audioCtx && gainNode) {
-                gainNode.gain.setTargetAtTime(Number(gainSlider.value) / 100, audioCtx.currentTime, 0.02);
-            }
-        }
-
-        function loadSpecimen(spec, restartIfPlaying = true) {
-            selectedSpecimen = spec;
-            activeCodeEl.textContent = spec.code;
-            activeTitleEl.textContent = spec.name;
-            activeNoteEl.textContent = spec.note;
-
-            freqSlider.value = spec.freq;
-            cutoffSlider.value = spec.cutoff;
-            gainSlider.value = spec.gain;
-            syncReadouts();
-            renderSpecimens();
-
-            if (isPlaying && restartIfPlaying) {
-                rebuildSource();
-            }
-        }
-
-        function renderSpecimens() {
-            const list = currentWaveFilter === 'all'
-                ? specimens
-                : specimens.filter(s => s.wave === currentWaveFilter);
-
-            specimenListEl.innerHTML = list.map(spec => {
-                const isSelected = spec.code === selectedSpecimen.code;
-                return `
-                    <div class="specimen-row ${isSelected ? 'selected' : ''}" data-code="${spec.code}">
-                        <div class="d-flex justify-content-between align-items-start gap-2">
-                            <div>
-                                <div class="mono small" style="color: var(--signal);">${spec.code} // ${spec.meta}</div>
-                                <div class="fw-bold fs-5">${spec.name}</div>
-                            </div>
-                            <span class="tag-outline mono">${spec.waveLabel}</span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            document.querySelectorAll('.specimen-row').forEach(row => {
-                row.addEventListener('click', () => {
-                    const found = specimens.find(s => s.code === row.dataset.code);
-                    if (found) loadSpecimen(found, true);
-                });
-            });
-        }
-
-        // Oscilloscope Renderer
-        const canvas = document.getElementById('scopeCanvas');
-        const ctx2d = canvas.getContext('2d');
-
-        function drawScope() {
-            requestAnimationFrame(drawScope);
-            const w = canvas.width;
-            const h = canvas.height;
-            ctx2d.clearRect(0, 0, w, h);
-
-            const styles = getComputedStyle(document.documentElement);
-            const signalColor = styles.getPropertyValue('--signal').trim();
-            const gridColor = styles.getPropertyValue('--hairline-soft').trim();
-
-            // Center line
-            ctx2d.strokeStyle = gridColor;
-            ctx2d.lineWidth = 1;
-            ctx2d.beginPath();
-            ctx2d.moveTo(0, h / 2);
-            ctx2d.lineTo(w, h / 2);
-            ctx2d.stroke();
-
-            ctx2d.strokeStyle = signalColor;
-            ctx2d.lineWidth = 2.2;
-            ctx2d.beginPath();
-
-            if (isPlaying && analyserNode) {
-                const bufferLength = analyserNode.frequencyBinCount;
-                const dataArray = new Uint8Array(bufferLength);
-                analyserNode.getByteTimeDomainData(dataArray);
-
-                const sliceWidth = w / bufferLength;
-                let x = 0;
-                for (let i = 0; i < bufferLength; i++) {
-                    const v = dataArray[i] / 128.0;
-                    const y = (v * h) / 2;
-                    if (i === 0) ctx2d.moveTo(x, y);
-                    else ctx2d.lineTo(x, y);
-                    x += sliceWidth;
-                }
-            } else {
-                // Idle preview curve based on selected waveform & frequency
-                const cycles = Math.max(1.5, Math.min(8, Number(freqSlider.value) / 90));
-                for (let x = 0; x <= w; x++) {
-                    const phase = (x / w) * Math.PI * 2 * cycles;
-                    let sample = 0;
-                    if (selectedSpecimen.wave === 'sine') {
-                        sample = Math.sin(phase);
-                    } else if (selectedSpecimen.wave === 'triangle') {
-                        sample = (2 / Math.PI) * Math.asin(Math.sin(phase));
-                    } else if (selectedSpecimen.wave === 'sawtooth') {
-                        sample = 2 * ((phase / (Math.PI * 2)) % 1) - 1;
-                    } else {
-                        sample = Math.sin(phase) * Math.cos(phase * 3.7) * 0.7;
-                    }
-                    const amp = (Number(gainSlider.value) / 45) * (h * 0.36);
-                    const y = h / 2 + sample * amp;
-                    if (x === 0) ctx2d.moveTo(x, y);
-                    else ctx2d.lineTo(x, y);
-                }
-            }
-            ctx2d.stroke();
-        }
-
-        // Events
-        playToggleBtn.addEventListener('click', () => {
-            if (isPlaying) stopAudio();
-            else startAudio();
-        });
-
-        resetBtn.addEventListener('click', () => {
-            loadSpecimen(selectedSpecimen, true);
-        });
-
-        freqSlider.addEventListener('input', syncReadouts);
-        cutoffSlider.addEventListener('input', syncReadouts);
-        gainSlider.addEventListener('input', syncReadouts);
-
-        waveFilterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                waveFilterBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentWaveFilter = btn.dataset.wave;
-                renderSpecimens();
-            });
-        });
-
-        const modeToggle = document.getElementById('modeToggle');
-        modeToggle.addEventListener('click', () => {
-            const html = document.documentElement;
-            const next = html.getAttribute('data-theme') === 'day' ? 'night' : 'day';
-            html.setAttribute('data-theme', next);
-            modeToggle.textContent = next === 'night' ? 'DAY MODE' : 'NIGHT MODE';
-        });
-
-        // Init
-        loadSpecimen(specimens[0], false);
-        drawScope();
-    </script>
+    <!-- Custom JS -->
+    <script src="script.js"></script>
 </body>
 </html>

@@ -1,0 +1,199 @@
+:root {
+    --bg-base: #F3EFE6;
+    --bg-panel: #E8E2D5;
+    --ink-main: #18222F;
+    --ink-dim: #546170;
+    --accent-clay: #C8553D;
+    --accent-navy: #1E324A;
+    --border-strong: #18222F;
+    --border-soft: rgba(24, 34, 47, 0.22);
+}
+
+[data-mode="radar"] {
+    --bg-base: #101720;
+    --bg-panel: #17212E;
+    --ink-main: #EDE8DC;
+    --ink-dim: #93A1B0;
+    --accent-clay: #E56B50;
+    --accent-navy: #8BB1D9;
+    --border-strong: #EDE8DC;
+    --border-soft: rgba(237, 232, 220, 0.2);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-base);
+    color: var(--ink-main);
+    font-family: 'Space Grotesk', sans-serif;
+    margin: 0;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.mono {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.text-dim {
+    color: var(--ink-dim);
+}
+
+.text-clay {
+    color: var(--accent-clay);
+}
+
+/* Structural Grid Rules */
+.rule-b {
+    border-bottom: 1px solid var(--border-strong);
+}
+
+.rule-t {
+    border-top: 1px solid var(--border-strong);
+}
+
+.rule-r-lg {
+    border-bottom: 1px solid var(--border-strong);
+}
+
+@media (min-width: 992px) {
+    .rule-r-lg {
+        border-bottom: none;
+        border-right: 1px solid var(--border-strong);
+    }
+}
+
+/* Top Telemetry Strip */
+.telemetry-bar {
+    background-color: var(--bg-panel);
+    border-bottom: 1px solid var(--border-strong);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+}
+
+.pulse-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--accent-navy);
+    display: inline-block;
+}
+
+.pulse-indicator.gust {
+    background-color: var(--accent-clay);
+    box-shadow: 0 0 0 4px rgba(200, 85, 61, 0.25);
+}
+
+.hero-display {
+    font-size: clamp(2.7rem, 6.8vw, 5.4rem);
+    line-height: 0.94;
+    letter-spacing: -0.04em;
+    font-weight: 700;
+}
+
+/* Sector Log Items */
+.sector-item {
+    border-bottom: 1px solid var(--border-soft);
+    padding: 1.15rem 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease, padding-left 0.15s ease;
+}
+
+.sector-item:hover {
+    background-color: var(--bg-panel);
+    padding-left: 1.1rem;
+}
+
+.sector-item.active {
+    background-color: var(--bg-panel);
+    border-left: 4px solid var(--accent-clay);
+    padding-left: 1.1rem;
+}
+
+.zone-badge {
+    border: 1px solid var(--border-soft);
+    font-size: 0.72rem;
+    padding: 0.2rem 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Canvas & Metrics */
+canvas#windCanvas {
+    width: 100%;
+    height: 190px;
+    display: block;
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-strong);
+}
+
+.metric-cell {
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-soft);
+    padding: 0.55rem 0.4rem;
+}
+
+.metric-label {
+    font-size: 0.65rem;
+    color: var(--ink-dim);
+    letter-spacing: 0.05em;
+}
+
+.metric-val {
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+/* Range Sliders */
+input[type="range"].atmos-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: var(--border-soft);
+    outline: none;
+    border-radius: 0;
+}
+
+input[type="range"].atmos-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 22px;
+    background: var(--accent-clay);
+    border: 1px solid var(--ink-main);
+    cursor: pointer;
+}
+
+/* Buttons */
+.btn-grid {
+    background-color: transparent;
+    color: var(--ink-main);
+    border: 1px solid var(--border-strong);
+    border-radius: 0;
+    font-size: 0.78rem;
+    padding: 0.42rem 0.8rem;
+}
+
+.btn-grid:hover,
+.btn-grid.active {
+    background-color: var(--ink-main);
+    color: var(--bg-base);
+}
+
+.btn-clay-solid {
+    background-color: var(--accent-clay);
+    color: #FFFFFF;
+    border: 1px solid var(--ink-main);
+    border-radius: 0;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    padding: 0.65rem 1.1rem;
+}
+
+.btn-clay-solid:hover {
+    filter: brightness(1.08);
+    color: #FFFFFF;
+}
