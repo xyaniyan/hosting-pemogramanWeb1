@@ -312,10 +312,19 @@ surfaceToggle.addEventListener("click", () => {
 // Live UTC Clock
 function tickClock() {
     const now = new Date();
-    const hh = String(now.getUTCHours()).padStart(2, "0");
-    const mm = String(now.getUTCMinutes()).padStart(2, "0");
-    const ss = String(now.getUTCSeconds()).padStart(2, "0");
-    utcClock.textContent = `UTC ${hh}:${mm}:${ss}`;
+    const wib = new Intl.DateTimeFormat("id-ID", {
+        timeZone: "Asia/Jakarta",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+    }).format(now).replaceAll(".", ":");
+
+    const utcHh = String(now.getUTCHours()).padStart(2, "0");
+    const utcMm = String(now.getUTCMinutes()).padStart(2, "0");
+    const utcSs = String(now.getUTCSeconds()).padStart(2, "0");
+
+    utcClock.textContent = `WIB ${wib} // UTC ${utcHh}:${utcMm}:${utcSs}`;
 }
 
 setInterval(tickClock, 1000);
