@@ -1,54 +1,61 @@
 <!DOCTYPE html>
-<html lang="id" data-mode="paper">
+<html lang="id" x-data="forexDesk()" :data-fx-theme="fxTheme">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATMOS // LOG — Telemetri Atmosfer & Simulasi Barometrik</title>
+    <title>FX // DESK — Simulator Pasangan Mata Uang & Pip Calculator</title>
 
     <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts: Space Grotesk + JetBrains Mono -->
+    <!-- Google Fonts: Plus Jakarta Sans + JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- Alpine.js Logic & CDN -->
+    <script src="app.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
 </head>
 <body>
 
-    <!-- Top Telemetry Ticker -->
-    <div class="telemetry-bar py-2">
-        <div class="container-fluid px-3 px-lg-4 d-flex flex-wrap justify-content-between align-items-center gap-2 mono">
+    <!-- Top FX Session Strip -->
+    <div class="fx-strip py-2">
+        <div class="container-xxl px-3 px-md-4 d-flex flex-wrap justify-content-between align-items-center gap-2 mono">
             <div class="d-flex align-items-center gap-2">
-                <span class="pulse-indicator" id="sensorDot"></span>
-                <span id="sensorStatus">BAROGRAPH: NOMINAL</span>
+                <span class="fx-led" :class="{ 'paused': !streaming }"></span>
+                <span x-text="streaming ? 'QUOTES: LIVE PIP STREAM' : 'QUOTES: PAUSED'"></span>
             </div>
-            <div>STASIUN // -6.3918° S, 106.7621° E (ELEV. 78M)</div>
+            <div class="d-none d-md-block">
+                SESSION: <strong class="text-amber" x-text="activeSession"></strong>
+            </div>
             <div class="d-flex align-items-center gap-2">
-                <span id="utcClock">UTC 00:00:00</span>
-                <button id="surfaceToggle" class="btn btn-sm py-0 px-2 mono btn-grid">
-                    NIGHT RADAR
-                </button>
+                <span x-text="wibTime"></span>
+                <button @click="toggleTheme()" class="btn-fx mono" x-text="fxTheme === 'slate' ? 'LIGHT DESK' : 'SLATE DESK'"></button>
             </div>
         </div>
     </div>
 
-    <!-- Header / Masthead -->
-    <header class="rule-b">
-        <div class="container-fluid px-3 px-lg-4 py-4 py-lg-5">
-            <div class="row align-items-end g-4">
+    <!-- Header -->
+    <header class="fx-line-b">
+        <div class="container-xxl px-3 px-md-4 py-3 py-md-4">
+            <div class="row align-items-end g-3">
                 <div class="col-lg-8">
-                    <div class="mono small mb-2 text-clay">[OBS-09] ARCHIVE OF ATMOSPHERIC DYNAMICS</div>
-                    <h1 class="hero-display mb-0">ATMOS<br>// LOG</h1>
+                    <div class="mono small text-amber mb-1">[FX // INTERBANK SIMULATOR] BID / ASK & FLOATING P&L</div>
+                    <h1 class="fx-title mb-0">
+                        FX <span>//</span> DESK
+                        <span class="fx-sub">Terminal pemantau kurs, pip movement, dan simulasi posisi lot</span>
+                    </h1>
                 </div>
                 <div class="col-lg-4">
-                    <p class="mb-3 text-dim">
-                        Arsip pengamatan mikroklimat dan simulator vektor angin berbasis <strong>Bootstrap 5.3</strong>, <strong>HTML5 Canvas</strong>, dan <strong>Modular Vanilla JS</strong>. Pilih sektor observasi untuk memuat profil tekanan udara atau uji turbulensi secara langsung.
-                    </p>
-                    <div class="mono small text-dim">
-                        STATUS: STATIC DEPLOYMENT // SEPARATED ASSETS
+                    <div class="balance-card mono">
+                        <div class="small text-dim">MARGIN BALANCE (USD)</div>
+                        <div class="fs-5 fw-bold" x-text="formatUsd(balance)"></div>
+                        <div class="small" :class="totalFloatingPnl >= 0 ? 'text-up' : 'text-down'"
+                             x-text="`FLOATING P&L: ${totalFloatingPnl >= 0 ? '+' : ''}${formatUsd(totalFloatingPnl)}`"></div>
                     </div>
                 </div>
             </div>
@@ -56,108 +63,170 @@
     </header>
 
     <!-- Main Workspace -->
-    <main class="container-fluid px-3 px-lg-4">
-        <div class="row">
-            <!-- Left Column: Observation Logs -->
-            <div class="col-lg-7 rule-r-lg py-4 pe-lg-4">
-                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 pb-3 mb-2 rule-b">
-                    <span class="mono small fw-bold">LOG PENGAMATAN SEKTOR (06)</span>
-                    <div class="d-flex flex-wrap gap-1" id="zoneFilters">
-                        <button class="btn-grid mono active" data-zone="all">SEMUA</button>
-                        <button class="btn-grid mono" data-zone="tropis">KONVEKTIF</button>
-                        <button class="btn-grid mono" data-zone="maritim">MARITIM</button>
-                        <button class="btn-grid mono" data-zone="orografis">OROGRAFIS</button>
+    <main class="container-xxl px-3 px-md-4">
+        <div class="row g-0">
+            <!-- Left: Currency Pairs List -->
+            <section class="col-lg-6 fx-line-r-lg py-3 py-md-4 pe-lg-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 pb-3 mb-2 fx-line-b-soft">
+                    <div class="d-flex gap-1">
+                        <template x-for="grp in ['ALL', 'MAJOR', 'CROSS']" :key="grp">
+                            <button
+                                @click="pairGroup = grp"
+                                class="btn-fx mono"
+                                :class="{ 'active': pairGroup === grp }"
+                                x-text="grp">
+                            </button>
+                        </template>
                     </div>
+
+                    <button @click="streaming = !streaming" class="btn-fx mono">
+                        <i class="bi" :class="streaming ? 'bi-pause-fill' : 'bi-play-fill'"></i>
+                        <span x-text="streaming ? 'PAUSE' : 'RESUME'"></span>
+                    </button>
                 </div>
 
-                <div id="sectorList"></div>
-            </div>
+                <div>
+                    <template x-for="item in filteredPairs" :key="item.pair">
+                        <div
+                            @click="selectPair(item.pair)"
+                            class="pair-row"
+                            :class="{ 'selected': activePair === item.pair }">
+                            <div class="d-flex justify-content-between align-items-center gap-2">
+                                <div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="fw-bold mono fs-5" x-text="item.pair"></span>
+                                        <span class="pair-badge mono" x-text="item.group"></span>
+                                    </div>
+                                    <div class="small text-dim" x-text="`${item.label} • Spread ${item.spreadPips} pip`"></div>
+                                </div>
 
-            <!-- Right Column: Wind Vector & Barometric Simulator -->
-            <div class="col-lg-5 py-4 ps-lg-4">
-                <div class="sticky-top" style="top: 1.25rem;">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="mono small fw-bold">[SIM-02] WIND & PRESSURE TUNNEL</span>
-                        <span class="mono small text-clay fw-bold" id="activeSectorCode">SEC-01</span>
-                    </div>
-
-                    <h2 class="h4 fw-bold mb-1" id="activeSectorName">Lembah Cisadane — Pagi</h2>
-                    <p class="small mb-3 text-dim" id="activeSectorSummary">
-                        Inversi suhu permukaan rendah dengan kabut tipis bergerak perlahan ke arah utara.
-                    </p>
-
-                    <!-- Particle & Vector Canvas -->
-                    <canvas id="windCanvas" width="600" height="190" class="mb-3"></canvas>
-
-                    <!-- Live Metric Readout Strip -->
-                    <div class="row g-2 mb-3 text-center mono">
-                        <div class="col-4">
-                            <div class="metric-cell">
-                                <div class="metric-label">TEKANAN</div>
-                                <div class="metric-val" id="pressureVal">1012 hPa</div>
+                                <div class="text-end mono">
+                                    <div class="fw-bold fs-5" x-text="formatRate(item, item.ask)"></div>
+                                    <div class="small fw-semibold"
+                                         :class="item.changePips >= 0 ? 'text-up' : 'text-down'"
+                                         x-text="`${item.changePips >= 0 ? '+' : ''}${item.changePips.toFixed(1)} pip`">
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-4">
-                            <div class="metric-cell">
-                                <div class="metric-label">TITIK EMBUN</div>
-                                <div class="metric-val" id="dewPointVal">21.4 °C</div>
+                    </template>
+                </div>
+            </section>
+
+            <!-- Right: Quote Curve, Order Ticket & Open Positions -->
+            <section class="col-lg-6 py-3 py-md-4 ps-lg-4">
+                <div class="sticky-lg-top" style="top: 1.25rem;">
+                    <!-- Pair Header -->
+                    <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                        <div>
+                            <div class="mono small text-dim" x-text="`${currentPair.label} // PIP = ${currentPair.pipSize}`"></div>
+                            <h2 class="h4 fw-bold mono mb-0" x-text="currentPair.pair"></h2>
+                        </div>
+                        <div class="text-end mono small">
+                            <div>BID: <strong x-text="formatRate(currentPair, currentPair.bid)"></strong></div>
+                            <div>ASK: <strong class="text-amber" x-text="formatRate(currentPair, currentPair.ask)"></strong></div>
+                        </div>
+                    </div>
+
+                    <!-- SVG Price Line -->
+                    <div class="fx-panel mb-3">
+                        <div class="d-flex justify-content-between mono small text-dim mb-2">
+                            <span>TICK CURVE</span>
+                            <span x-text="`SPREAD: ${currentPair.spreadPips} PIP`"></span>
+                        </div>
+                        <svg viewBox="0 0 500 140" class="fx-svg" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="fxAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" :stop-color="currentPair.changePips >= 0 ? '#22C55E' : '#F43F5E'" stop-opacity="0.26"/>
+                                    <stop offset="100%" :stop-color="currentPair.changePips >= 0 ? '#22C55E' : '#F43F5E'" stop-opacity="0.0"/>
+                                </linearGradient>
+                            </defs>
+                            <polygon :points="areaPoints" fill="url(#fxAreaGrad)"></polygon>
+                            <polyline
+                                fill="none"
+                                :stroke="currentPair.changePips >= 0 ? '#22C55E' : '#F43F5E'"
+                                stroke-width="2.5"
+                                :points="linePoints">
+                            </polyline>
+                        </svg>
+                    </div>
+
+                    <!-- Order Ticket -->
+                    <div class="fx-panel mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2 mono small">
+                            <span class="fw-bold">TICKET EKSEKUSI</span>
+                            <span class="text-dim" x-text="`EST. PIP VALUE: $${estimatedPipValue.toFixed(2)}/pip`"></span>
+                        </div>
+
+                        <div class="row g-2 align-items-center mb-3">
+                            <div class="col-6">
+                                <label class="mono small text-dim d-block mb-1">UKURAN LOT</label>
+                                <div class="input-group input-group-sm">
+                                    <button @click="lotSize = Math.max(0.01, Number((lotSize - 0.05).toFixed(2)))" class="btn-fx mono" type="button">-</button>
+                                    <input type="number" min="0.01" max="5" step="0.01" x-model.number="lotSize" class="form-control text-center mono fx-input">
+                                    <button @click="lotSize = Math.min(5, Number((lotSize + 0.05).toFixed(2)))" class="btn-fx mono" type="button">+</button>
+                                </div>
+                            </div>
+                            <div class="col-6 text-end mono">
+                                <div class="small text-dim">MARGIN DIBUTUHKAN</div>
+                                <div class="fw-bold" x-text="formatUsd(requiredMargin)"></div>
                             </div>
                         </div>
-                        <div class="col-4">
-                            <div class="metric-cell">
-                                <div class="metric-label">KLASIFIKASI</div>
-                                <div class="metric-val text-clay" id="beaufortVal">BF-3</div>
+
+                        <div class="d-flex gap-2">
+                            <button @click="openPosition('BUY')" class="btn-long mono flex-fill">
+                                BUY / LONG
+                            </button>
+                            <button @click="openPosition('SELL')" class="btn-short mono flex-fill">
+                                SELL / SHORT
+                            </button>
+                        </div>
+
+                        <div class="mono small mt-2 text-amber" x-show="tradeNote" x-text="tradeNote"></div>
+                    </div>
+
+                    <!-- Open Positions -->
+                    <div class="fx-panel">
+                        <div class="d-flex justify-content-between align-items-center pb-2 mb-2 fx-line-b-soft mono small">
+                            <span class="fw-bold" x-text="`POSISI TERBUKA (${positions.length})`"></span>
+                            <button @click="resetDesk()" class="btn-reset mono">RESET DESK</button>
+                        </div>
+
+                        <template x-if="positions.length === 0">
+                            <div class="mono small text-dim py-2">Belum ada posisi aktif. Klik BUY atau SELL untuk membuka posisi.</div>
+                        </template>
+
+                        <template x-for="pos in positions" :key="pos.id">
+                            <div class="d-flex justify-content-between align-items-center gap-2 py-2 fx-line-b-soft mono small">
+                                <div>
+                                    <strong :class="pos.side === 'BUY' ? 'text-up' : 'text-down'" x-text="pos.side"></strong>
+                                    <span x-text="` ${pos.pair} (${pos.lot.toFixed(2)} lot)`"></span>
+                                    <div class="text-dim" style="font-size: 0.7rem;" x-text="`Entry ${pos.entryPrice}`"></div>
+                                </div>
+                                <div class="text-end">
+                                    <div class="fw-bold"
+                                         :class="calcPositionPnl(pos) >= 0 ? 'text-up' : 'text-down'"
+                                         x-text="`${calcPositionPnl(pos) >= 0 ? '+' : ''}${formatUsd(calcPositionPnl(pos))}`">
+                                    </div>
+                                    <button @click="closePosition(pos.id)" class="btn-close-pos mono mt-1">CLOSE</button>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Controls -->
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mono small mb-1">
-                            <label for="windSpeedSlider">KECEPATAN ANGIN (KNOT)</label>
-                            <span id="windSpeedReadout" class="fw-bold">12 kt</span>
-                        </div>
-                        <input type="range" class="atmos-slider" id="windSpeedSlider" min="2" max="48" step="1" value="12">
-                    </div>
-
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mono small mb-1">
-                            <label for="azimuthSlider">AZIMUTH VEKTOR (°)</label>
-                            <span id="azimuthReadout" class="fw-bold">045° NE</span>
-                        </div>
-                        <input type="range" class="atmos-slider" id="azimuthSlider" min="0" max="359" step="1" value="45">
-                    </div>
-
-                    <div class="mb-4">
-                        <div class="d-flex justify-content-between mono small mb-1">
-                            <label for="humiditySlider">KELEMBAPAN RELATIF (%)</label>
-                            <span id="humidityReadout" class="fw-bold">78%</span>
-                        </div>
-                        <input type="range" class="atmos-slider" id="humiditySlider" min="30" max="100" step="1" value="78">
-                    </div>
-
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-clay-solid flex-grow-1 mono" id="gustTriggerBtn">
-                            <i class="bi bi-wind me-1"></i> SIMULASI HEMBUSAN (GUST)
-                        </button>
-                        <button class="btn-grid mono" id="resetSectorBtn">RESET</button>
+                        </template>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="py-3 mt-4 rule-t">
-        <div class="container-fluid px-3 px-lg-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 mono small text-dim">
-            <div>ATMOS // LOG — OBSERVATORY STATIC ARCHIVE</div>
-            <div>HTML5 + CSS3 + VANILLA JS + BOOTSTRAP 5.3</div>
+    <footer class="py-3 mt-4 fx-line-t">
+        <div class="container-xxl px-3 px-md-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 mono small text-dim text-center">
+            <span>FX // DESK — SIMULATOR FOREX EDUKASI (KURS SIMULATIF)</span>
+            <span>BOOTSTRAP 5.3 + ALPINE.JS 3</span>
         </div>
     </footer>
 
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JS -->
-    <script src="script.js"></script>
 </body>
 </html>
